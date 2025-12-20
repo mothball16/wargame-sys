@@ -15,6 +15,26 @@ export type InputSystem = {
     endInput: {[Enum.UserInputType]: ()->()};
 }
 
+
+-- initializes and connects the input system
+-- ```
+-- --example
+-- self.InputSystem = InputSystem.new({
+--     on = {
+--         [self.keybinds.MountedFire] = function()
+--             self.controller:Fire()
+--         end,
+--     },
+--     off = {
+--         [self.keybinds.DoAction] = function()
+--             -- short-press to toggle
+--             if self.timeHoldingJoystick < JOYSTICK_TOGGLE_THRESHOLD then
+--                 return
+--             end
+--             self.joystick:Disable()
+--         end,
+--     }
+-- })
 function InputSystem.new(args, _)
     local self = setmetatable({}, InputSystem)
     self.maid = dir.Maid.new()

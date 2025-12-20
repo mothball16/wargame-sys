@@ -32,7 +32,7 @@ end
 -- (obj, from)
 function Validator:Exists(obj, from)
     if devMode then
-        local err = (self:FailHead() .. (from or "") .. " doesn't exist")
+        local err = (self:FailHead() .. (from or "obj.") .. " doesn't exist")
         assert(obj, err)
     end
     return obj

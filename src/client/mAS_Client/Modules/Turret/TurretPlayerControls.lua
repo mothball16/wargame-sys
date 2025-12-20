@@ -75,13 +75,13 @@ function TurretPlayerControls.new(args: {
 			end,
 
 			[self.keybinds.ToggleCamera] = function()
-				--[[
-				local inCam = self.controller.Camera and self.controller.Camera.enabled
+
+				local inCam = self.controller.ForwardCamera and self.controller.ForwardCamera.enabled
 				if inCam then
-					self.controller.Camera:Disable()
+					self.controller.ForwardCamera:Disable()
 				else
-					self.controller.Camera:Enable()
-				end]]
+					self.controller.ForwardCamera:Enable()
+				end
 			end,
 
 			[self.keybinds.ZoomIn] = function()

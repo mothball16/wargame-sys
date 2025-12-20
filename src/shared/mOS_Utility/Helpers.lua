@@ -1,23 +1,30 @@
 local Helpers = {}
 
 function Helpers:TableCombine(tbl1, ...)
-    for _, t in pairs({...}) do
+    for _, t in ipairs({...}) do
         for k, v in pairs(t) do
-            tbl1[k] = v
+            if type(v) == "table" and type(tbl1[k]) == "table" then
+                self:TableCombine(tbl1[k], v)
+            else
+                tbl1[k] = v
+            end
         end
     end
 end
 
 function Helpers:TableCombineNew(...)
     local tbl = {}
-    for _, t in pairs({...}) do
+    for _, t in ipairs({...}) do
         for k, v in pairs(t) do
-            tbl[k] = v
+            if type(v) == "table" and type(tbl[k]) == "table" then
+                tbl[k] = self:TableCombineNew(tbl[k], v)
+            else
+                tbl[k] = v
+            end
         end
     end
     return tbl
 end
-
 
 function Helpers:TableOverwrite(orig, overwrite)
     local tbl = {}

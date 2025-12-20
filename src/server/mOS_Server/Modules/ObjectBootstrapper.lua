@@ -10,7 +10,6 @@ local ServerSignals = dir.ServerSignals
 
 local function _checkServerPreload(required)
     if not required:GetAttribute(dir.Consts.LAZY_LOAD_SERVER_CONTROLLER_ATTR) then
-        print("geg")
         ServerSignals.InitObject:Fire(required)
     end
 end
@@ -33,6 +32,7 @@ local function Initialize(player, required)
     if player then
         dir.NetUtils:FireClient(player, dir.Events.Reliable.OnInitialize, required)
     end
+
     ServerSignals.InitObject:Fire(required)
 end
 
@@ -80,7 +80,7 @@ local function AddToolInitListener(required)
     local tool = required.Parent
     assert(tool:IsA("Tool"), "you cant add a tool init listener to a non-tool idiot")
     local owner = nil
-    local toolId =  HTTP:GenerateGUID()
+    local toolId = HTTP:GenerateGUID()
     required:SetAttribute(dir.Consts.OBJECT_IDENT_ATTR, toolId)
     --_checkServerPreload(required)
     tool.Equipped:Connect(function()
@@ -97,8 +97,11 @@ local function AddToolInitListener(required)
     end)
 end
 
+local function PrepImmediateSpawn(required)
+    required:SetAttribute(dir.Consts.OBJECT_IDENT_ATTR, HTTP:GenerateGUID())
+end
+
 local function SpawnListener(required, add)
-    print("loaded")
     add(required)
     _checkServerPreload(required)
 end
@@ -112,7 +115,7 @@ return function()
     end
 
     for _, v in pairs(CS:GetTagged(dir.Consts.SPAWN_INIT_TAG_NAME)) do
-        _checkServerPreload(v)
+        SpawnListener(v, PrepImmediateSpawn)
     end
 
     CS:GetInstanceAddedSignal(dir.Consts.SEATED_INIT_TAG_NAME):Connect(function(inst)

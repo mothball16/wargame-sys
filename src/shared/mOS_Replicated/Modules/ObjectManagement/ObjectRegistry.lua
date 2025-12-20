@@ -18,7 +18,7 @@ end
 -- obj here is just the metatable holding everything together
 function ObjectRegistry:Register(obj, required)
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
-    if type(validator:Exists(obj.Destroy, "destroy method of obj")) ~= "function" then
+    if type(validator:Exists(obj.Destroy, "destroy method of obj (REQUIRED)")) ~= "function" then
         validator.Error("obj metatable needs a destroy method")
     end
 
@@ -40,7 +40,7 @@ function ObjectRegistry:Deregister(required)
 
 end
 
-function ObjectRegistry:WasRegistered(required)    
+function ObjectRegistry:WasRegistered(required)
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
     return objects[ident] ~= nil
 end

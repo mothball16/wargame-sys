@@ -1,3 +1,5 @@
+--[==[
+
 --#region required
 local dir = require(script.Parent.Parent.Parent.Directory)
 local validator = dir.Validator.new(script.Name)
@@ -73,3 +75,4 @@ end
 
 return AimToMouseJoystick
 
+]==]

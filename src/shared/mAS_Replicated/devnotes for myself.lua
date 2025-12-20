@@ -35,9 +35,9 @@ todo for ObjectRegistry/ObjectLifetimeListener/ObjectInitializer relationship
 
 separation of concerns between required and module configs
 - required should only be used for:
-  - physical connections to parts
-  - persistent state
-  - hot-swappable modules (UI handler, joystick, etc.)
+  - physical connections to parts (objectValues)
+  - persistent state (attributes)
+  - hot-swappable modules (UI handler, joystick, etc.) (objectValue pointing to modules)
 - otherwise, use module configs
 
 issues regarding particle replication
@@ -50,4 +50,9 @@ from the server position
 clients and toss out packets where the part has been destroyed. as for destruction, parenting into ReplicatedStorage
 on the server-side for a couple seconds should give time for replication to process and reparent particles, with omega
 laggy people just invalidating the request
+
+
+
+
+
 ]=]

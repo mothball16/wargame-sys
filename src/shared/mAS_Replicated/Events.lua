@@ -4,38 +4,39 @@ client -> server: Request<...>
 server -> client: On<...>
 ]]
 
+
 return {
     Reliable = {
         -- projecitle replication
-        OnProjectileDestroyed = "OnProjectileDestroyed",
-        RequestProjectileDestroy = "RequestProjectileDestroy",
+        OnProjectileDestroyed = "mAS_OnProjectileDestroyed",
+        RequestProjectileDestroy = "mAS_RequestProjectileDestroy",
 
-        OnProjectileCreated = "OnProjectileCreated",
-        RequestProjectileCreate = "RequestProjectileCreate",
+        OnProjectileCreated = "mAS_OnProjectileCreated",
+        RequestProjectileCreate = "mAS_RequestProjectileCreate",
 
-        OnProjectileHit = "OnProjectileHit",
-        RequestProjectileHit = "RequestProjectileHit",
+        OnProjectileHit = "mAS_OnProjectileHit",
+        RequestProjectileHit = "mAS_RequestProjectileHit",
 
         -- attachment management
-        RequestAttachmentDetach = "RequestAttachmentDetach",
-        RequestAttachmentUse = "RequestAttachmentUse",
-        RequestAttachmentAttach = "RequestAttachmentAttach",
-        OnAttachStateModified = "OnAttachStateModified", -- (required), calls clients to refresh the attachstate. this would only be connected to within clientcontrollers that need the information
+        RequestAttachmentDetach = "mAS_RequestAttachmentDetach",
+        RequestAttachmentUse = "mAS_RequestAttachmentUse",
+        RequestAttachmentAttach = "mAS_RequestAttachmentAttach",
+        OnAttachStateModified = "mAS_OnAttachStateModified", -- (required), calls clients to refresh the attachstate. this would only be connected to within clientcontrollers that need the information
 
         -- fx
-        OnParticlePlayed = "OnParticlePlayed",
-        OnParticleCreated = "OnParticleCreated",
+        OnParticlePlayed = "mAS_OnParticlePlayed",
+        OnParticleCreated = "mAS_OnParticleCreated",
 
         -- shake
-        OnShake = "OnShake",
+        OnShake = "mAS_OnShake",
     };
     Unreliable = {
         -- turret weld stuff
-        OnTurretWeldsUpdated = "OnTurretWeldsUpdated",
+        OnTurretWeldsUpdated = "mAS_OnTurretWeldsUpdated",
 
 
         -- projectile replication
-        OnProjectileUpdated = "OnProjectileUpdated",
-        RequestProjectileUpdate = "RequestProjectileUpdate",
+        OnProjectileUpdated = "mAS_OnProjectileUpdated",
+        RequestProjectileUpdate = "mAS_RequestProjectileUpdate",
     }
 }

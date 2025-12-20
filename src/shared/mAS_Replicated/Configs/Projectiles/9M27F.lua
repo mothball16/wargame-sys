@@ -5,7 +5,7 @@ local RocketAttachableBase = require(script.Parent.RocketAttachableBase)
 local RocketController = require(dir.Modules.OnFire.RocketController)
 local GoShake = require(dir.Modules.OnHit.GoShake)
 local DoShake = require(dir.Modules.OnFire.DoShake)
-local FX = require(dir.Modules.FX.FX)
+local FX = require(dir.mOS.Modules.FX.FX)
 
 local GoBoom = require(dir.Modules.OnHit.GoBoom)
 --#endregion

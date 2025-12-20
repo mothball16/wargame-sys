@@ -1,0 +1,57 @@
+{
+  "name": "rocket-artillery",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "Shared": {
+        "$className": "Folder",
+        "DS_Replicated": { "$path": "src/shared/DS_Replicated" },
+        "mOS_Replicated": { "$path": "src/shared/mOS_Replicated" },
+        "mOS_Utility": { "$path": "src/shared/mOS_Utility" }
+      }
+    },
+
+    "ServerScriptService": {
+      "Server": {
+        "$className": "Folder",
+        "mOS_Server": { "$path": "src/server/mOS_Server" },
+        "DS_Server": { "$path": "src/server/DS_Server" }
+      }
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "$className": "Folder",
+          "mOS_Client": { "$path": "src/client/mOS_Client" },
+          "DS_Client": { "$path": "src/client/DS_Client" }
+        }
+      }
+    },
+
+    "Workspace": {
+      "$properties": {
+        "FilteringEnabled": true
+      }
+    },
+    "Lighting": {
+      "$properties": {
+        "Ambient": [
+          0,
+          0,
+          0
+        ],
+        "Brightness": 2,
+        "GlobalShadows": true,
+        "Outlines": false,
+        "Technology": "Voxel"
+      }
+    },
+    "SoundService": {
+      "$properties": {
+        "RespectFilteringEnabled": true
+      }
+    }
+  }
+}

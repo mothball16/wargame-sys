@@ -6,8 +6,8 @@ local mOS =             root.Parent.mOS_Client
 
 
 return {
-    Signals =           require(share.mAS_Replicated.Modules.Core.Signals),
-    Main =              require(share.mAS_Replicated.Directory),
+    Signals =           require(repl.Modules.Core.Signals),
+    Main =              require(repl.Directory),
     mOS =               mOS,
     Repl =              repl,
     Root =              root,

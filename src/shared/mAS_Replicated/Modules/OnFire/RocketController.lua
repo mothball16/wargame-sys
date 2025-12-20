@@ -35,7 +35,6 @@ function RocketController:CalcVelo(initLook, speed, drop)
 	 return initLook * speed - Vector3.new(0, drop, 0)
 end
 
-
 function RocketController:StepDrop(arc, speed, dt)
 	return arc * speed * dt
 end

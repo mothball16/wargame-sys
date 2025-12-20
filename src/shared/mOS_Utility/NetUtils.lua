@@ -59,11 +59,20 @@ function NetUtils:FireOtherClients(plr, eventName, ...)
     end
 end
 
+function NetUtils:FireAllClients(eventName, ...)
+    self:FireOtherClients(nil, eventName, ...)
+end
+
 function NetUtils:FireClient(plr, eventName, ...)
     local event = validator:Exists(self:GetEvent(eventName), "event: ".. tostring(eventName))
     event:FireClient(plr, ...)
 end
 
+--[[
+looks for event through the centralized Net module
+caches on lookup for performance
+no script should ever interact with Net itself
+]]
 function NetUtils:GetEvent(name)
     if not events[name] then
         for _, v in pairs(Net:GetEvents()) do
