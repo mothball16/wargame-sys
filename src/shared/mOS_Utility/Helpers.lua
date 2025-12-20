@@ -25,15 +25,23 @@ function Helpers:TableCombineNew(...)
     end
     return tbl
 end
-
 function Helpers:TableOverwrite(orig, overwrite)
     local tbl = {}
-    for k,v in pairs(orig) do
-        tbl[k] = v
+    for k, v in pairs(orig) do
+        if type(v) == "table" then
+            tbl[k] = Helpers:TableOverwrite(v, {})
+        else
+            tbl[k] = v
+        end
     end
-    for k,v in pairs(overwrite) do
-        tbl[k] = v
+    for k, v in pairs(overwrite) do
+        if type(v) == "table" and type(tbl[k]) == "table" then
+            tbl[k] = Helpers:TableOverwrite(tbl[k], v)
+        else
+            tbl[k] = v
+        end
     end
+
     return tbl
 end
 

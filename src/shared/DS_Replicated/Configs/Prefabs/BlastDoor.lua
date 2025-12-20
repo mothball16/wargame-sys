@@ -13,7 +13,6 @@ return dir.Helpers:TableCombineNew(levelOneAuth, {
         OpenCooldown = openTime + holdTime + closeTime + cdPadding
     },
     Scanner = {
-        
         OnUseStrategy = "ScannerPortalStrategy",
     },
     PartMover = {
