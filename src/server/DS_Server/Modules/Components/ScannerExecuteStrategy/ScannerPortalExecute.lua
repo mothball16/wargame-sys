@@ -6,7 +6,7 @@ local dir = dirServer.Main
 this does the whole FX thing with the scanner
 ]]
 
-local ScannerPortalStrategy = {}
+local ScannerPortalExecute = {}
 local cache = {}
 
 
@@ -29,7 +29,7 @@ local function _FindEssentialParts(model: Model)
     return parts
 end
 
-function ScannerPortalStrategy:ToggleOn(thing, keyword)
+function ScannerPortalExecute:ToggleOn(thing, keyword)
     dir.Helpers:Switch (thing.ClassName) {
         ["Decal"] = function()
             (thing :: Decal).Transparency = thing:GetAttribute("OnTrans") or 0
@@ -49,7 +49,7 @@ function ScannerPortalStrategy:ToggleOn(thing, keyword)
     }
 end
 
-function ScannerPortalStrategy:ToggleOff(thing, keyword)
+function ScannerPortalExecute:ToggleOff(thing, keyword)
     dir.Helpers:Switch (thing.ClassName) {
         ["Decal"] = function()
             (thing :: Decal).Transparency = thing:GetAttribute("OffTrans") or 1
@@ -66,7 +66,7 @@ function ScannerPortalStrategy:ToggleOff(thing, keyword)
     }
 end
 
-function ScannerPortalStrategy:Execute(model: Model, status)
+function ScannerPortalExecute:Execute(model: Model, status)
     local scannerEssentialParts = cache[model]
 
     -- this whole thing probably doesnt really take that much resources but
@@ -94,4 +94,4 @@ function ScannerPortalStrategy:Execute(model: Model, status)
     end
 end
 
-return ScannerPortalStrategy
+return ScannerPortalExecute

@@ -45,8 +45,9 @@ local function _checkSetup(required)
     local canvas = validator:ValueIsOfClass(required:FindFirstChild("Canvas"), "CanvasGroup")
     local buttonText = validator:ValueIsOfClass(required:FindFirstChild("ButtonText"), "TextLabel")
     local actionText = validator:ValueIsOfClass(required:FindFirstChild("ActionText"), "TextLabel")
+    local progressBar = validator:ValueIsOfClass(required:FindFirstChild("ProgressBar"), "Frame")
 
-    return background, beam, beamAttach, canvas, buttonText, actionText
+    return background, beam, beamAttach, canvas, buttonText, actionText, progressBar
 end
 
 local function _fadeIn(fadeTime: number, canvas: CanvasGroup, beam: Beam)
@@ -67,8 +68,15 @@ local function _fadeOut(fadeTime: number, canvas: CanvasGroup, beam: Beam)
     TS:Create(canvas, tweenInfo, {GroupTransparency = 1}):Play()
 end
 
+local function _numLerp(a, b, t)
+    return a + (b - a) * t
+end
+
 function ScanVisual.new(args, required)
-    local background, beam, beamAttach, canvas, buttonText, actionText = _checkSetup(required)
+    local
+        background, beam, beamAttach, canvas,
+        buttonText, actionText, progressBar = _checkSetup(required)
+
     local toTrack = plr.Character and plr.Character:FindFirstChild(TRACK_PART) or nil
     local self = setmetatable({
         background = background,
@@ -77,11 +85,16 @@ function ScanVisual.new(args, required)
         canvas = canvas,
         buttonText = buttonText,
         actionText = actionText,
+        progressBar = progressBar,
 
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         toTrack = toTrack,
         model = args.model,
         prompt = args.prompt,
+
+        holdProgress = 0,
+        holding = false,
+
         maid = dir.Maid.new(),
     }, ScanVisual)
     self.maid:GiveTasks(
@@ -113,6 +126,12 @@ function ScanVisual:Update(dt)
     local lookAtCamCF = CFrame.lookAt(self.model.PrimaryPart.Position, game.Workspace.CurrentCamera.CFrame.Position)
     local newCF = (self.model.PrimaryPart.CFrame :: CFrame):Lerp(lookAtCamCF, dt * self.config.lerpFactor)
     self.model:SetPrimaryPartCFrame(newCF)
+
+    -- progress bar tween
+    self.holdProgress = self.holding and self.holdProgress + dt or 0
+
+    local holdPct = math.clamp(self.holdProgress / self.prompt.HoldDuration, 0, 1)
+    self.progressBar.Size = UDim2.fromScale(1, _numLerp(self.progressBar.Size.Y.Scale, holdPct, dt * 10))
 end
 
 function ScanVisual:SetState(state)
@@ -121,13 +140,16 @@ function ScanVisual:SetState(state)
         validator:Warn("promptstate " .. state .. " isn't registered in PromptStates, ignoring change")
         return
     end
+    local showPrompt = not stateInfo["HideButton"]
+
     --[[
     Background = "rbxassetid://129468391154883",
         BackgroundColor = Color3.fromRGB(255, 131, 73),
         BeamColor = ColorSequence.new(Color3.fromRGB(255, 131, 73)),
         ]]
     self.background["Main"].Image = stateInfo.Background
-
+    self.buttonText.Visible = showPrompt
+    self.actionText.Visible = showPrompt
     for _, v in pairs(self.background) do
         v.ImageColor3 = stateInfo.BackgroundColor
     end
@@ -139,16 +161,17 @@ function ScanVisual:SetScale(scale)
 end
 
 function ScanVisual:ConnectEvents()
-
     self.maid:GiveTask(self.prompt:GetAttributeChangedSignal(dir.Consts.DOOR_SCAN_VISUAL_ATTR):Connect(function()
         self:SetState(self.prompt:GetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR))
     end))
 
     self.maid:GiveTask(self.prompt.PromptButtonHoldBegan:Connect(function()
+        self.holding = true
         self:SetScale(1.25)
     end))
 
     self.maid:GiveTask(self.prompt.PromptButtonHoldEnded:Connect(function()
+        self.holding = false
         self:SetScale(1)
     end))
     self.maid:GiveTask(self.prompt.PromptHidden:Once(function()

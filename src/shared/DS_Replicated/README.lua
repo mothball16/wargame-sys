@@ -10,6 +10,13 @@ Scanner.ScanVisual
     -> the ScanVisual configuration to use. (CTRL+P for the PromptStates file)
 Scanner.UseThrottle
     -> time between (INDIVIDUAL) scanner accesses if fail
+Scanner.OnMountStrategy
+    -> the function used when a prompt is entered. mostly for logic triggers
+    -> just use ScannerAutoMount or ScannerManualMount 99% of the time but yes u can make compelx ones with this
+Scanner.OnUseStrategy
+    -> the function used (server) when the prompt is triggered, on the model itself
+    -> this should not be doing any important logic, just visuals
+
 AuthChecks
     -> the ruleset for opening tha door. (CTRL+P for the AuthChecks file.)
     -> the format is just {funcName, {args}}

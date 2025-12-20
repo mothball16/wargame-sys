@@ -1,50 +1,53 @@
 local dir = require(script.Parent.Parent.Parent.Directory)
-local levelOneAuth = require(script.Parent.AuthPrefabs.LevelOneAuth)
 
-local openTime = 3
-local holdTime = 3
-local closeTime = 4.7
-local cdPadding = 1
+local openTime = 1
+local holdTime = 2
+local closeTime = 1
 
 
-return dir.Helpers:TableCombineNew(levelOneAuth, {
+return {
     DoorRoot = {
-        DisableCollisionOnOpen = false,
-        OpenCooldown = openTime + holdTime + closeTime + cdPadding
+        OpenCooldown = openTime + holdTime + closeTime
     },
     Scanner = {
-        OnMountStrategy = "ScannerManualMount",
-        OnUseStrategy = "ScannerPortalExecute",
+        Template = "HiddenScanner",
+        OnMountStrategy = "ScannerAutoMount",
+        OnUseStrategy = "ScannerHiddenExecute",
+       -- DisplayPrompt = false,
+        UseThrottle = 0
     },
     PartMover = {
         Use = "TweenMoveSequence",
         Instructions = {
-            Default = {
-                Door1 = {
+            Front = {
+                Door = {
                     [0] = {
-                        to = "GoTo",
+                        to = "GoToFront",
                         info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorOpen"}
+                        sound = {"PushDoorOpen"}
                     },
                     [openTime + holdTime] = {
                         to = "Orig",
                         info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorClose"}
+                        sound = {"PushDoorClose"}
                     },
                 },
-                Door2 = {
+            },
+            Back = {
+                Door = {
                     [0] = {
-                        to = "GoTo",
+                        to = "GoToBack",
                         info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorOpen"}
+                        sound = {"PushDoorOpen"}
                     },
+
                     [openTime + holdTime] = {
                         to = "Orig",
                         info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorClose"}
+                        sound = {"PushDoorClose"}
                     },
-                }
+                },
             }
         }
     }
-})
+}

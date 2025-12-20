@@ -45,6 +45,16 @@ function AuthChecks:_HasToolWithTag(plr: Player, tag)
     return false
 end
 
+function AuthChecks:_HoldingToolWithTag(plr: Player, tag)
+    if plr.Character then
+        for _, v in ipairs(plr.Character:GetChildren()) do
+            if CS:HasTag(v,tag) then return true end
+        end
+    end
+    return false
+end
+
+
 --[[
 wraps around a series of checks
 TODO: merge this with Check

@@ -6,11 +6,10 @@ local dir = dirServer.Main
 this does jack shit
 ]]
 
-local ScannerHiddenStrategy = {}
-local cache = {}
+local ScannerHiddenExecute = {}
 
-function ScannerHiddenStrategy:Execute(model: Model, status)
-    
+function ScannerHiddenExecute:Execute(model: Model, status)
+
 end
 
-return ScannerHiddenStrategy
+return ScannerHiddenExecute

@@ -1,18 +1,21 @@
 local dir = require(script.Parent.Parent.Parent.Directory)
-local levelOneAuth = require(script.Parent.AuthPrefabs.LevelOneAuth)
+local auth = require(script.Parent.AuthPrefabs.LockedAuth)
 
 local openTime = 1
 local holdTime = 2
 local closeTime = 1
 
 
-return {
+return dir.Helpers:TableCombineNew(auth, {
     DoorRoot = {
         OpenCooldown = openTime + holdTime + closeTime
     },
     Scanner = {
         Template = "HiddenScanner",
-        OnUseStrategy = "ScannerHiddenStrategy",
+        OnMountStrategy = "ScannerAutoMount",
+        OnUseStrategy = "ScannerHiddenExecute",
+        --DisplayPrompt = false,
+        UseThrottle = 0
     },
     PartMover = {
         Use = "TweenMoveSequence",
@@ -48,4 +51,4 @@ return {
             }
         }
     }
-}
+})

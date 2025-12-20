@@ -2,7 +2,8 @@
 local dirServer = require(script.Parent.Parent.Parent.Directory)
 local dir = dirServer.Main
 local validator = dir.Validator.new(script.Name)
-local Strategies = script.Parent.ScannerStrategy
+local UseStrategies = script.Parent.ScannerExecuteStrategy
+local MountStrategies = script.Parent.ScannerMountStrategy
 --#endregion required
 --[[
 handles prompt interaction triggers & displays
@@ -10,15 +11,19 @@ no authoritative state on the actual functions
 ]]
 local RESET_TIME = 5
 
-local fallbacks = {
-    Template = "DefaultScanner",
-    ScanVisual = "Default",
-    OnUseStrategy = "ScannerPortalStrategy",
-    UseThrottle = 1
-}
+
 
 local Scanner = {}
 Scanner.__index = Scanner
+
+local fallbacks = {
+    Template = "DefaultScanner",
+    ScanVisual = "Default",
+    OnMountStrategy = "ScannerManualMount",
+    OnUseStrategy = "ScannerPortalExecute",
+    DisplayPrompt = true,
+    UseThrottle = 1,
+}
 
 function Scanner.new(args)
     local self = setmetatable({
@@ -30,11 +35,14 @@ function Scanner.new(args)
         lock = false
     }, Scanner)
 
+    self.OnMountStrategy = require(
+        assert(
+            MountStrategies:FindFirstChild(self.config.OnMountStrategy),
+            "onMountStrategy missing"))
     self.OnUseStrategy = require(
         assert(
-            Strategies:FindFirstChild(self.config.OnUseStrategy),
+            UseStrategies:FindFirstChild(self.config.OnUseStrategy),
             "onUseStrategy missing"))
-
     return self
 end
 
@@ -46,14 +54,20 @@ function Scanner:_Triggered(plr)
 
     local status = self.config.OnActivated(plr)
     if status == dir.Consts.ACCESS_DENIED then
-        self.prompt:SetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR, "Denied")
-        self:SetLock(true)
+        self:SetPromptVisual("Denied")
+        if self.config.UseThrottle > 0 then self:SetLock(true) end
         task.delay(self.config.UseThrottle, function()
-            self:SetLock(false)
+            if self.config.UseThrottle > 0 then self:SetLock(false) end
         end)
     end
 
     self.OnUseStrategy:Execute(self.model, status)
+
+    -- reset prompt visual if accepted
+    -- (for autoquerying so denied visual doesnt stay when accepted)
+    if status == dir.Consts.ACCESS_ACCEPTED then
+        self:SetPromptVisual()
+    end
 
     -- resets the scanner if no actions have further occured
     self.runCount += 1
@@ -74,26 +88,32 @@ function Scanner:Mount()
     self.model = template:Clone()
     self.model:SetPrimaryPartCFrame(self.prompt.Parent.CFrame)
     self.model.Parent = self.prompt.Parent
-    --reset to neut. state
+    --reset to neut. state & setup connection
     self.OnUseStrategy:Execute(self.model, dir.Consts.ACCESS_NEUTRAL)
-
-    -- some stuff for connections and external use
-    self.maid:GiveTask((self.prompt :: ProximityPrompt).Triggered:Connect(function(plr)
-       self:_Triggered(plr)
+    self.maid:GiveTasks(self.OnMountStrategy:Execute(self.prompt, function(...)
+        self:_Triggered(...)
     end))
 
+    -- some stuff for connections and external use
+
     self.prompt:AddTag(dir.Consts.DOOR_SCANNER_PROMPT_TAG)
-    self.prompt:SetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR, self.config.ScanVisual)
+    self:SetPromptVisual()
+    self.prompt:SetAttribute(dir.Consts.DOOR_SCANNER_INTERACTION_TYPE_ATTR, self.OnMountStrategy.TriggerType)
+    self.prompt:SetAttribute(dir.Consts.DOOR_SCANNER_SHOULD_DISPLAY_PROMPT_ATTR, self.config.DisplayPrompt)
     return self
 end
 
 function Scanner:SetLock(lock)
-    -- reset the prompt state
     if not lock then
-        self.prompt:SetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR, self.config.ScanVisual)
+        self:SetPromptVisual()
     end
     self.lock = lock
     self.prompt.Enabled = not lock
+end
+
+function Scanner:SetPromptVisual(state)
+    if not state then state = self.config.ScanVisual end
+    self.prompt:SetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR, state)
 end
 
 function Scanner:Destroy()

@@ -1,7 +1,6 @@
 return {
     Scanner = {
         ScanVisual = "LevelOne",
-        UseThrottle = 1,
     },
     AuthChecks = {
         {"OR", {

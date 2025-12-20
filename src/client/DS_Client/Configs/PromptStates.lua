@@ -3,6 +3,7 @@ return {
         Background = "rbxassetid://129468391154883",
         BackgroundColor = Color3.fromRGB(255, 131, 73),
         BeamColor = ColorSequence.new(Color3.fromRGB(255, 131, 73)),
+        HideButton = true,
     },
     Default = {
         Background = "rbxassetid://105429466956219",

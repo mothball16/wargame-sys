@@ -4,6 +4,6 @@ return {
         UseThrottle = 1,
     },
     AuthChecks = {
-        {"ReturnFalse"},
+        {"HoldingToolWithTag", {"LevelFive"}},
     }
 }

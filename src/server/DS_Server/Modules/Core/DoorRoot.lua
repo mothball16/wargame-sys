@@ -91,7 +91,6 @@ end
 
 function DoorRoot:SetOpen(open)
     self.open = open
-    print(self.config.DoorRoot)
     if self.config.DoorRoot.DisableCollisionOnOpen then
         for _, v in pairs(self.collidableParts) do
             v.CanCollide = not open
