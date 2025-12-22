@@ -6,5 +6,37 @@
         {
             "folderPath": "wargame-systems\\src\\client\\mAS_Client\\Modules\\"
         }
-    ]
+    ],
+    "files.exclude": {
+        "src/client/mAS_Client": true,
+        "src/client/mGS_Client": true,
+        "src/server/mAS_Server": true,
+        "src/server/mGS_Server": true,
+        "src/shared/mAS_Replicated": true,
+        "src/shared/mGS_Replicated": true,
+        "src/shared/mAS_Replicated/Modules/AttachmentSystem": true,
+        "{s,[!s]*,sr,s[!r]*,sr[!c]*,src?*}": true
+    },
+    "folder-scopes.scopes": {
+        "DoorSystem": {
+            "wargame-systems": {
+                "scopedFolderPath": "src",
+                "excludedPaths": [
+                    "src/client/mAS_Client",
+                    "src/client/mGS_Client",
+                    "src/server/mAS_Server",
+                    "src/server/mGS_Server",
+                    "src/shared/mAS_Replicated",
+                    "src/shared/mGS_Replicated",
+                    "src/shared/mAS_Replicated",
+                    "src/shared/mAS_Replicated",
+                    "src/shared/mAS_Replicated/Modules/AttachmentSystem"
+                ]
+            }
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "comments": "",
+        "textMateRules": []
+    }
 }

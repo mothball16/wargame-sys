@@ -1,16 +1,13 @@
+local Door = require(script.Parent.Parent.DoorConfig)
 local dir = require(script.Parent.Parent.Parent.Directory)
 local levelOneAuth = require(script.Parent.AuthPrefabs.LevelOneAuth)
 
-local openTime = 3
-local holdTime = 3
-local closeTime = 4.7
-local cdPadding = 1
+local openTime, closeTime = 3, 3
 
-
-return dir.Helpers:TableCombineNew(levelOneAuth, {
+local config: Door.DoorConfig = {
     DoorRoot = {
         DisableCollisionOnOpen = false,
-        OpenCooldown = openTime + holdTime + closeTime + cdPadding
+        CloseType = "ManualClose",
     },
     Scanner = {
         OnMountStrategy = "ScannerManualMount",
@@ -20,31 +17,41 @@ return dir.Helpers:TableCombineNew(levelOneAuth, {
         Use = "TweenMoveSequence",
         Instructions = {
             Default = {
-                Door1 = {
-                    [0] = {
-                        to = "GoTo",
-                        info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorOpen"}
+                Open = {
+                    Door1 = {
+                        [0] = {
+                            to = "GoTo",
+                            info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
+                            sound = {"BlastDoorOpen"}
+                        },
                     },
-                    [openTime + holdTime] = {
-                        to = "Orig",
-                        info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorClose"}
-                    },
+                    Door2 = {
+                        [0] = {
+                            to = "GoTo",
+                            info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
+                            sound = {"BlastDoorOpen"}
+                        },
+                    }
                 },
-                Door2 = {
-                    [0] = {
-                        to = "GoTo",
-                        info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorOpen"}
+                Close = {
+                    Door1 = {
+                        [0] = {
+                            to = "Orig",
+                            info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
+                            sound = {"BlastDoorClose"}
+                        },
                     },
-                    [openTime + holdTime] = {
-                        to = "Orig",
-                        info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                        sound = {"BlastDoorClose"}
-                    },
+                    Door2 = {
+                        [0] = {
+                            to = "Orig",
+                            info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
+                            sound = {"BlastDoorClose"}
+                        },
+                    }
                 }
             }
         }
     }
-})
+}
+
+return dir.Helpers:TableCombineNew(levelOneAuth, config)

@@ -6,25 +6,25 @@ a series of functions for checking door auths
 99% of the time you should only be interactig with AuthChecks:Check()
 ]]
 
-function AuthChecks:_ReturnFalse()
+function AuthChecks:ReturnFalse()
     return false
 end
 
-function AuthChecks:_NotLockdownOrAuth(plr)
+function AuthChecks:NotLockdownOrAuth(plr)
     -- put your thing here
     warn("not implemented")
     return true
 end
 
-function AuthChecks:_IsOfGroup(plr, groupId)
-    return AuthChecks:_IsOfGroupRank(plr, groupId, 1)
+function AuthChecks:IsOfGroup(plr, groupId)
+    return AuthChecks:IsOfGroupRank(plr, groupId, 1)
 end
 
-function AuthChecks:_IsOfGroupRank(plr, groupId, minRank)
+function AuthChecks:IsOfGroupRank(plr, groupId, minRank)
     return plr:GetRankInGroup(groupId) >= minRank
 end
 
-function AuthChecks:_IsInTeam(plr: Player, teams: {Team})
+function AuthChecks:IsInTeam(plr: Player, teams: {Team})
     for _, team in ipairs(teams) do
         if plr.Team == team then
             return true
@@ -33,7 +33,7 @@ function AuthChecks:_IsInTeam(plr: Player, teams: {Team})
     return false
 end
 
-function AuthChecks:_HasToolWithTag(plr: Player, tag)
+function AuthChecks:HasToolWithTag(plr: Player, tag)
     for _, v in ipairs(plr.Backpack:GetChildren()) do
         if CS:HasTag(v,tag) then return true end
     end
@@ -45,7 +45,7 @@ function AuthChecks:_HasToolWithTag(plr: Player, tag)
     return false
 end
 
-function AuthChecks:_HoldingToolWithTag(plr: Player, tag)
+function AuthChecks:HoldingToolWithTag(plr: Player, tag)
     if plr.Character then
         for _, v in ipairs(plr.Character:GetChildren()) do
             if CS:HasTag(v,tag) then return true end
@@ -59,12 +59,12 @@ end
 wraps around a series of checks
 TODO: merge this with Check
 ]]
-function AuthChecks:_OR(plr, ...)
+function AuthChecks:OR(plr, ...)
     for _, check in ipairs({...}) do
         local funcName = check[1]
         local args = check[2] or {}
 
-        local func = self["_" .. funcName]
+        local func = self[funcName]
         if not func then
             error("unknown authcheck: " .. funcName)
         end
@@ -90,7 +90,7 @@ function AuthChecks:Check(plr, checks)
         local funcName = check[1]
         local args = check[2] or {}
 
-        local func = self["_" .. funcName]
+        local func = self[funcName]
         if func then
             if not func(self, plr, table.unpack(args)) then return false end
         else

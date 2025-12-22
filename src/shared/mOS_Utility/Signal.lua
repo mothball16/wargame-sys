@@ -127,7 +127,7 @@ setmetatable(Connection, {
 	A Signal is a data structure that allows events to be dispatched
 	and observed.
 
-	This implementation is a direct copy of the de facto standard, [GoodSignal](https://devforum.roblox.com/t/lua-signal-class-comparison-optimal-goodsignal-class/1387063),
+	This implementation is a direct copy of the de facto standard, [GoodSignal](https: //devforum.roblox.com/t/lua-signal-class-comparison-optimal-goodsignal-class/1387063),
 	with some added methods and typings.
 
 	For example:

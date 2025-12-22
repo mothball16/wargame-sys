@@ -1,0 +1,3 @@
+local DoorManager = {}
+
+return DoorManager

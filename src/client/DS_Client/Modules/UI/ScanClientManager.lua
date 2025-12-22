@@ -18,6 +18,11 @@ local throttle, throttleVal = 0.2, 0.2
 local ScanClientManager = {}
 local activePrompts = {}
 
+-- this would be replaced by whatever settings system you guys have
+local SETTINGS_DEMO = {
+    rotateTowardsCam = false
+}
+
 local function _CreateVisual(prompt, id)
     local promptStateType = prompt:GetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR)
     if not promptStateType then
@@ -36,6 +41,7 @@ local function _CreateVisual(prompt, id)
         initState = promptStateType,
         beamInteractionType = ScanVisual.BeamInteractionType.LockToTrackPart,
         prompt = prompt,
+        rotateTowardsCam = SETTINGS_DEMO["rotateTowardsCam"],
         OnDestroy = function()
             activePrompts[id] = nil
         end

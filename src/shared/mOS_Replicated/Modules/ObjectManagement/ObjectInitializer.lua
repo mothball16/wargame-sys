@@ -30,6 +30,8 @@ function ObjectInitializer:Execute(required)
 
     if not controllerRef then return end
     if controllerRef.Value then
+        assert(controllerRef.Value.Parent, "controller of name " .. controllerRef.Value.Name .. "doesn't exist")
+
         local controller = require(controllerRef.Value)
         local prefab = entryPoint:FindFirstChild("Prefab") and require(entryPoint:FindFirstChild("Prefab").Value) or {}
         validator:Exists(controller["new"], "new function of obj. controller")

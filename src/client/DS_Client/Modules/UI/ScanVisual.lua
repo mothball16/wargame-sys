@@ -4,6 +4,7 @@ local dir = dirClient.Main
 local validator = dir.Validator.new(script.Name)
 local PromptStates = require(dirClient.Root.Configs.PromptStates)
 local ExtraTweens = require(dir.Utility.ExtraTweens)
+local Parallax = require(dir.Utility.Parallax)
 --#endregion required
 
 local FADE_IN_TIME = 1
@@ -31,7 +32,8 @@ local fallbacks = {
     initState = "Default",
     lerpFactor = 5,
     offset = 0.5,
-    beamInteractionType = ScanVisual.BeamInteractionType.LockToTrackPart
+    beamInteractionType = ScanVisual.BeamInteractionType.LockToTrackPart,
+    rotateTowardsCam = false
 }
 
 local function _checkSetup(required)
@@ -46,8 +48,8 @@ local function _checkSetup(required)
     local buttonText = validator:ValueIsOfClass(required:FindFirstChild("ButtonText"), "TextLabel")
     local actionText = validator:ValueIsOfClass(required:FindFirstChild("ActionText"), "TextLabel")
     local progressBar = validator:ValueIsOfClass(required:FindFirstChild("ProgressBar"), "Frame")
-
-    return background, beam, beamAttach, canvas, buttonText, actionText, progressBar
+    local parallaxBase = validator:ValueIsOfClass(required:FindFirstChild("ParallaxBase"), "BasePart")
+    return background, beam, beamAttach, canvas, buttonText, actionText, progressBar, parallaxBase
 end
 
 local function _fadeIn(fadeTime: number, canvas: CanvasGroup, beam: Beam)
@@ -72,10 +74,11 @@ local function _numLerp(a, b, t)
     return a + (b - a) * t
 end
 
+-- I LOVE CODING UI!!!
 function ScanVisual.new(args, required)
     local
         background, beam, beamAttach, canvas,
-        buttonText, actionText, progressBar = _checkSetup(required)
+        buttonText, actionText, progressBar, parallaxBase = _checkSetup(required)
 
     local toTrack = plr.Character and plr.Character:FindFirstChild(TRACK_PART) or nil
     local self = setmetatable({
@@ -86,6 +89,7 @@ function ScanVisual.new(args, required)
         buttonText = buttonText,
         actionText = actionText,
         progressBar = progressBar,
+        parallax = Parallax.new(parallaxBase),
 
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         toTrack = toTrack,
@@ -99,7 +103,7 @@ function ScanVisual.new(args, required)
     }, ScanVisual)
     self.maid:GiveTasks(
         self.toTrack.Destroying:Once(function() self:Destroy() end),
-        self.model)
+        self.model, self.parallax)
 
     self.cancelFadeIn = _fadeIn(FADE_IN_TIME, canvas, beam)
     self.model:SetPrimaryPartCFrame(self.config.initCF * CFrame.new(0,0,-self.config.offset))
@@ -111,8 +115,7 @@ function ScanVisual.new(args, required)
     end
 
     self.buttonText.Text = self.prompt.KeyboardKeyCode.Name or "N/A"
-    self.actionText.Text = string.upper(tostring(self.prompt.ActionText)) or "INTERACT"
-
+    self:SetText(self.prompt:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
     self:SetState(self.config.initState)
     return self
 end
@@ -123,15 +126,19 @@ function ScanVisual:Update(dt)
         self.beamAttach.CFrame = CFrame.new(0,0, -mag)
     end
 
-    local lookAtCamCF = CFrame.lookAt(self.model.PrimaryPart.Position, game.Workspace.CurrentCamera.CFrame.Position)
-    local newCF = (self.model.PrimaryPart.CFrame :: CFrame):Lerp(lookAtCamCF, dt * self.config.lerpFactor)
-    self.model:SetPrimaryPartCFrame(newCF)
+    if self.config.rotateTowardsCam then
+        local lookAtCamCF = CFrame.lookAt(self.model.PrimaryPart.Position, game.Workspace.CurrentCamera.CFrame.Position)
+        local newCF = (self.model.PrimaryPart.CFrame :: CFrame):Lerp(lookAtCamCF, dt * self.config.lerpFactor)
+        self.model:SetPrimaryPartCFrame(newCF)
+    end
+
 
     -- progress bar tween
     self.holdProgress = self.holding and self.holdProgress + dt or 0
 
     local holdPct = math.clamp(self.holdProgress / self.prompt.HoldDuration, 0, 1)
     self.progressBar.Size = UDim2.fromScale(1, _numLerp(self.progressBar.Size.Y.Scale, holdPct, dt * 10))
+    self.parallax:Update()
 end
 
 function ScanVisual:SetState(state)
@@ -160,23 +167,43 @@ function ScanVisual:SetScale(scale)
     TS:Create(self.canvas, TweenInfo.new(0.5, Enum.EasingStyle.Cubic), {Size = UDim2.fromScale(scale, scale)}):Play()
 end
 
+function ScanVisual:SetText(rootState)
+    dir.Helpers:Switch (rootState) {
+        ["Open"] = function()
+            self.actionText.Text = "CLOSE"
+        end,
+        ["Close"] = function()
+            self.actionText.Text = "OPEN"
+        end,
+        ["Broken"] = function()
+            self.actionText.Text = "<BROKEN>"
+        end,
+        default = function()
+            validator:Warn("scanvisual has no function to process root state " .. rootState)
+        end
+    }
+end
+
 function ScanVisual:ConnectEvents()
-    self.maid:GiveTask(self.prompt:GetAttributeChangedSignal(dir.Consts.DOOR_SCAN_VISUAL_ATTR):Connect(function()
-        self:SetState(self.prompt:GetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR))
-    end))
+    self.maid:GiveTasks(
+        self.prompt:GetAttributeChangedSignal(dir.Consts.DOOR_SCAN_VISUAL_ATTR):Connect(function()
+            self:SetState(self.prompt:GetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR))
+        end),
+        self.prompt:GetAttributeChangedSignal(dir.Consts.DOOR_ROOT_STATE_ATTR):Connect(function()
+            self:SetText(self.prompt:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
+        end),
+        self.prompt.PromptButtonHoldBegan:Connect(function()
+            self.holding = true
+            self:SetScale(1.25)
+        end),
+        self.prompt.PromptButtonHoldEnded:Connect(function()
+            self.holding = false
+            self:SetScale(1)
+        end),
+        self.prompt.PromptHidden:Once(function()
+            self:Destroy()
+        end))
 
-    self.maid:GiveTask(self.prompt.PromptButtonHoldBegan:Connect(function()
-        self.holding = true
-        self:SetScale(1.25)
-    end))
-
-    self.maid:GiveTask(self.prompt.PromptButtonHoldEnded:Connect(function()
-        self.holding = false
-        self:SetScale(1)
-    end))
-    self.maid:GiveTask(self.prompt.PromptHidden:Once(function()
-        self:Destroy()
-    end))
     return self
 end
 

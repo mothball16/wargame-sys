@@ -17,7 +17,9 @@ function ObjectRegistry:Get(id)
 end
 -- obj here is just the metatable holding everything together
 function ObjectRegistry:Register(obj, required)
+    assert(obj["ClassName"], "classname must exist on objs that serve as roots! use ClassName = script.Name in 99% of cases")
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
+
     if type(validator:Exists(obj.Destroy, "destroy method of obj (REQUIRED)")) ~= "function" then
         validator.Error("obj metatable needs a destroy method")
     end

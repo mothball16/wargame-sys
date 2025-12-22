@@ -1,5 +1,8 @@
 --[[
 
+[!] this is outdated - i will make a DoorConfig type instead for autocomplete tmrw
+
+
 [CONFIG]
 DoorRoot.DisableCollisionOnOpen
     -> set to true by default. determines whether doors are cancollide or not during opening

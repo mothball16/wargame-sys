@@ -25,7 +25,7 @@ local fallbacks = {
     UseThrottle = 1,
 }
 
-function Scanner.new(args)
+function Scanner.new(args, required: Model)
     local self = setmetatable({
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         maid = dir.Maid.new(),
@@ -43,6 +43,12 @@ function Scanner.new(args)
         assert(
             UseStrategies:FindFirstChild(self.config.OnUseStrategy),
             "onUseStrategy missing"))
+
+    -- buh.....
+    self.prompt:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, required:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
+    self.maid:GiveTask(required:GetAttributeChangedSignal(dir.Consts.DOOR_ROOT_STATE_ATTR):Connect(function()
+        self.prompt:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, required:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
+    end))
     return self
 end
 

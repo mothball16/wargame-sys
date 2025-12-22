@@ -16,7 +16,7 @@ local TweenMoveSequence = {}
 local function ParseAnim(config, parts)
     local anim = {}
     -- grab the instructions to translate into actionable tweens
-    for key, steps in pairs(config) do
+    for key, stepsForPart in pairs(config) do
         -- grab the parts corresponding to the instructions
         local partFolder = parts[key]
         if not parts[key] then
@@ -32,7 +32,7 @@ local function ParseAnim(config, parts)
 
         -- translate the two into tweens that use the part as the instance
         -- and the instruction as the info/move
-        for timeOf, step in pairs(steps) do
+        for timeOf, step in pairs(stepsForPart) do
             local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key).Value
             local sound = step.sound[1] and SFX:FindFirstChild(step.sound[1]) or nil
             local soundParent = step.sound[2] and partFolder:FindFirstChild(step.sound[2]) or mover
@@ -54,23 +54,51 @@ local function ParseAnim(config, parts)
     return anim
 end
 
+local function GetAnimLength(config)
+    local maxTime = 0
+    for _, stepsForPart in pairs(config) do
+        for timeOf, step in pairs(stepsForPart) do
+            maxTime = math.max(maxTime, timeOf + step.info[1] or 0) --step.info[1] is the tween time
+        end
+    end
+    return maxTime
+end
+
 function TweenMoveSequence:ExecuteOnServer(config, parts)
     dir.NetUtils:FireAllClients(dir.Events.Reliable.PlayAnimation, config, parts)
+    return GetAnimLength(config)
 end
 
 function TweenMoveSequence:ExecuteOnClient(config, parts)
+    local onFinish = Signal.new()
     local anim = ParseAnim(config, parts)
+    local remainingSteps = #anim
     for _, step in pairs(anim) do
         task.delay(step.timeOf, function()
-            step.tween:Play()
-            local sfx = (step.sound:Clone()) :: Sound
-            sfx.Parent = step.soundParent
-            sfx:Play()
-            sfx.Ended:Once(function()
-                sfx:Destroy()
-            end)
+            if step.sound then
+                local sfx = (step.sound:Clone()) :: Sound
+                sfx.Parent = step.soundParent
+                sfx:Play()
+                sfx.Ended:Once(function()
+                    sfx:Destroy()
+                end)
+            end
+
+            if step.tween then
+                step.tween:Play()
+                step.tween.Completed:Once(function()
+                    remainingSteps -= 1
+                    if remainingSteps == 0 then
+                        onFinish:Fire()
+                    end
+                end)
+            else
+                onFinish:Fire()
+            end
         end)
     end
+
+    return onFinish
 end
 
 return TweenMoveSequence

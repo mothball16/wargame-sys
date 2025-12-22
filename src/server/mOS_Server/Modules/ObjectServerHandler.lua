@@ -7,7 +7,7 @@ local objects = {}
 return function()
     dir.ServerSignals.InitObject:Connect(function(required)
         objects[required] = objectInitializer:Execute(required)
-        warn("shimureishon")
+        --warn("shimureishon")
     end)
 
     dir.ServerSignals.DestroyObject:Connect(function(required)
