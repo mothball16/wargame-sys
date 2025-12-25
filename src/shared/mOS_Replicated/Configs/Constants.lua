@@ -9,4 +9,6 @@ return {
     SEATED_INIT_TAG_NAME = "mOS_RunOnSeated";
     TOOL_INIT_TAG_NAME = "mOS_RunOnEquipped"; -- [!] under this tag, there is a delay because object initialization is done from the server. there is no way around this yet
     REPL_TO_ORIGINAL_CLIENT = false; -- for debugging only. disables the event origin check
+
+    FRAMEWORK_LOADED_ATTR = "mOS_Loaded";
 }
