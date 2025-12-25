@@ -1,4 +1,5 @@
--- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN COMPILEDOORCONFIG SNIPPET
+-- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN DOORCONFIGTYPECOMPILER SNIPPET IN CMD LINE
+-- (this will auto-upd DoorConfig. You cant see the change unless you close and re-open doorconfig if working in studio *)
 local DoorConfig = {}
 
 export type TweenKey = {[string]: TweenSequence}
@@ -26,7 +27,7 @@ export type DoorConfig = {
         UseThrottle: number
     },
 	PartMover: {
-        Use: string, 
+        Use: string,
         Instructions: {[string]: {[string]: TweenKey}}
     }
 }

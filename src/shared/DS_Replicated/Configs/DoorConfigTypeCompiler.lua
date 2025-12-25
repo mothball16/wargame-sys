@@ -52,7 +52,7 @@ export type DoorConfig = {
         UseThrottle: number
     },
 	PartMover: {
-        Use: string, 
+        Use: string,
         Instructions: {[string]: {[string]: TweenKey}}
     }
 }

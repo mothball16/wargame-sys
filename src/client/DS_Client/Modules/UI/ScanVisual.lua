@@ -31,9 +31,10 @@ local fallbacks = {
     initCF = CFrame.new(),
     initState = "Default",
     lerpFactor = 5,
-    offset = 0.5,
+    offset = 0.2,
     beamInteractionType = ScanVisual.BeamInteractionType.LockToTrackPart,
-    rotateTowardsCam = false
+    rotateTowardsCam = false,
+    rotOffset = CFrame.Angles(math.rad(-15), 0, 0)
 }
 
 local function _checkSetup(required)
@@ -49,7 +50,8 @@ local function _checkSetup(required)
     local actionText = validator:ValueIsOfClass(required:FindFirstChild("ActionText"), "TextLabel")
     local progressBar = validator:ValueIsOfClass(required:FindFirstChild("ProgressBar"), "Frame")
     local parallaxBase = validator:ValueIsOfClass(required:FindFirstChild("ParallaxBase"), "BasePart")
-    return background, beam, beamAttach, canvas, buttonText, actionText, progressBar, parallaxBase
+    local rotWeld = validator:ValueIsOfClass(required:FindFirstChild("RotWeld"), "Weld")
+    return background, beam, beamAttach, canvas, buttonText, actionText, progressBar, parallaxBase, rotWeld
 end
 
 local function _fadeIn(fadeTime: number, canvas: CanvasGroup, beam: Beam)
@@ -78,7 +80,8 @@ end
 function ScanVisual.new(args, required)
     local
         background, beam, beamAttach, canvas,
-        buttonText, actionText, progressBar, parallaxBase = _checkSetup(required)
+        buttonText, actionText, progressBar,
+        parallaxBase, rotWeld = _checkSetup(required)
 
     local toTrack = plr.Character and plr.Character:FindFirstChild(TRACK_PART) or nil
     local self = setmetatable({
@@ -114,6 +117,7 @@ function ScanVisual.new(args, required)
         self.maid:GiveTask(self.beamAttach)
     end
 
+    (rotWeld :: Weld).C1 *= self.config.rotOffset
     self.buttonText.Text = self.prompt.KeyboardKeyCode.Name or "N/A"
     self:SetText(self.prompt:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
     self:SetState(self.config.initState)
@@ -127,7 +131,10 @@ function ScanVisual:Update(dt)
     end
 
     if self.config.rotateTowardsCam then
-        local lookAtCamCF = CFrame.lookAt(self.model.PrimaryPart.Position, game.Workspace.CurrentCamera.CFrame.Position)
+        local targetPos = game.Workspace.CurrentCamera.CFrame.Position
+        
+        local lookAtCamCF = CFrame.lookAt(self.model.PrimaryPart.Position, targetPos)
+        
         local newCF = (self.model.PrimaryPart.CFrame :: CFrame):Lerp(lookAtCamCF, dt * self.config.lerpFactor)
         self.model:SetPrimaryPartCFrame(newCF)
     end

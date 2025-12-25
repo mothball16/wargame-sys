@@ -1,4 +1,5 @@
 return {
+    DOOR_ROOT_IDENTIFIER = "DS_Identifier",
     DOOR_ROOT_STATE_ATTR = "DS_DoorRootState",
     DOOR_SCANNER_PROMPT_TAG = "DS_ScannerPrompt",
     DOOR_SCANNER_SHOULD_DISPLAY_PROMPT_ATTR = "DS_ShouldDisplayPrompt",
@@ -13,5 +14,6 @@ return {
     ACCESS_DENIED = "Denied",
     ACCESS_ACCEPTED = "Accepted",
     ACCESS_NEUTRAL = "Neutral",
+    ACCESS_DISABLED = "Disabled",
 
 }

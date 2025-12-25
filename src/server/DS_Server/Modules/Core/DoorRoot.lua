@@ -42,8 +42,8 @@ function DoorRoot.new(args, required)
     local movingParts, scannerDirectory = _checkSetup(required)
     local self = setmetatable({
         ClassName = script.Name,
-
         required = required,
+        id = dir.NetUtils:GetId(required),
         maid = dir.Maid.new(),
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         movingParts = movingParts,
@@ -67,7 +67,7 @@ function DoorRoot.new(args, required)
         }), required):Mount())
     end
 
-    -- cache parts to setcollide
+    -- cache parts to setcollide (TODO: use collisiongroups instead)
     for _, movingPart in pairs(self.movingParts:GetChildren()) do
         local mover = movingPart.Mover.Value
         for _, v in pairs(mover:GetChildren()) do
@@ -77,11 +77,29 @@ function DoorRoot.new(args, required)
         end
     end
 
+    -- set default partmover instructions if not already set
+    local instructions = self.config.PartMover.Instructions
+    if not instructions["Default"] then
+        -- for common names that would equate to default
+        instructions["Default"] = instructions["Open"] or instructions["Front"]
+        -- for idiot config
+        if not instructions["Default"] then
+            warn("door should have a default PartMover instruction for script interactions, using a random key (BAD)")
+            warn(args)
+            instructions["Default"] = next(instructions)
+        end
+    end
+    -- ensure scripts have an interactable animKey
+    instructions["Scriptable"] = instructions["Scriptable"] or instructions["Default"]
+
     self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, DoorRoot.State.Closed)
 
+    -- notify listeners
+    dirServer.ServerSignals.OnDoorCreated:Fire(self.required)
     return self
 end
 
+-- handles user actions w/ rulecheck
 function DoorRoot:Activate(plr, animKey, bypassAuth)
     if self.lock then
         return dir.Consts.ACCESS_NEUTRAL
@@ -117,33 +135,36 @@ function DoorRoot:PlayAnim(key, sequence)
 end
 
 function DoorRoot:SetLock(lock)
+    self.step = (self.step + 1) % 10000
     for _, scanner in self.scanners do
         scanner:SetLock(lock)
     end
 end
 
-function DoorRoot:SetState(newState: string, args)
-    self.step = (self.step + 1) % 10000
+-- sets door state and plays provided transition code
+function DoorRoot:SetState(newState: string, args: {
+    animKey: string
+})
+    self:SetLock(true)
     self.state = newState
     local animLength = self:PlayAnim(args.animKey, newState)
+    local curStep = self.step
 
-    self:SetLock(true)
     -- if door is being opened and under the ForcedAutoClose setting, we don't want to be able to interact w/ it till the process is done
-    if newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose then
+    if newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose then 
         task.delay(animLength, function()
-            self:SetLock(false)
+            if curStep == self.step then
+                self:SetLock(false)
+            end
         end)
     end
-
 
     self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, newState)
     dir.Helpers:Switch (newState) {
         [DoorRoot.State.Opened] = function()
             self:ToggleOpenCollision(true)
             if self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ManualClose then
-                local curStep = self.step
                 task.delay(self.config.DoorRoot.AutoCloseSeconds + animLength, function()
-                    -- has no further action occured ?
                     if curStep == self.step then
                         self:SetState(DoorRoot.State.Closed, args)
                     end
@@ -158,6 +179,7 @@ function DoorRoot:SetState(newState: string, args)
         end
     }
 end
+
 function DoorRoot:ToggleOpenCollision(open)
     if self.config.DoorRoot.DisableCollisionOnOpen then
         for _, v in pairs(self.collidableParts) do
@@ -167,6 +189,7 @@ function DoorRoot:ToggleOpenCollision(open)
 end
 
 function DoorRoot:Destroy()
+    dirServer.ServerSignals.OnDoorDestroyed:Fire(self.required)
     self.maid:DoCleaning()
 end
 return DoorRoot

@@ -110,8 +110,12 @@ function Scanner:Mount()
 end
 
 function Scanner:SetLock(lock)
+    self.runCount += 1
     if not lock then
         self:SetPromptVisual()
+        self.OnUseStrategy:Execute(self.model, dir.Consts.ACCESS_NEUTRAL)
+    else
+        self.OnUseStrategy:Execute(self.model, dir.Consts.ACCESS_DISABLED)
     end
     self.lock = lock
     self.prompt.Enabled = not lock

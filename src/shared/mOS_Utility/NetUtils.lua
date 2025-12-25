@@ -50,6 +50,11 @@ function NetUtils:GetObject(id)
     return object
 end
 
+function NetUtils:GetObjectFromRequired(required)
+    return self:GetObject(self:GetId(required))
+end
+
+
 function NetUtils:FireOtherClients(plr, eventName, ...)
 
     local event = validator:Exists(self:GetEvent(eventName), "event: ".. tostring(eventName))

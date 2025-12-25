@@ -14,13 +14,12 @@
         "src/server/mGS_Server": true,
         "src/shared/mAS_Replicated": true,
         "src/shared/mGS_Replicated": true,
-        "src/shared/mAS_Replicated/Modules/AttachmentSystem": true,
-        "{s,[!s]*,sr,s[!r]*,sr[!c]*,src?*}": true
+        "src/shared/mAS_Replicated/Modules/AttachmentSystem": true
     },
     "folder-scopes.scopes": {
         "DoorSystem": {
             "wargame-systems": {
-                "scopedFolderPath": "src",
+                "scopedFolderPath": "",
                 "excludedPaths": [
                     "src/client/mAS_Client",
                     "src/client/mGS_Client",

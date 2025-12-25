@@ -77,4 +77,11 @@ function Helpers:GenInaccuracy(value)
     return CFrame.Angles(math.rad(inaccX), math.rad(inaccY), math.rad(inaccZ))
 end
 
+function Helpers:GetDictSize(t)
+    local n = 0
+    for _ in pairs(t) do
+        n = n + 1
+    end
+    return n
+end
 return Helpers

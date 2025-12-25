@@ -16,7 +16,8 @@
       "Server": {
         "$className": "Folder",
         "mOS_Server": { "$path": "src/server/mOS_Server" },
-        "DS_Server": { "$path": "src/server/DS_Server" }
+        "DS_Server": { "$path": "src/server/DS_Server" },
+        "DS_Test": { "$path": "src/server/DS_Test" }
       }
     },
 

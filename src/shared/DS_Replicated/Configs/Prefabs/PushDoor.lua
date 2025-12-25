@@ -8,7 +8,7 @@ local closeTime = 1
 
 local config: Door.DoorConfig = {
     DoorRoot = {
-        OpenCooldown = openTime + holdTime + closeTime
+        OpenCooldown = openTime + holdTime + closeTime,
     },
     Scanner = {
         Template = "HiddenScanner",

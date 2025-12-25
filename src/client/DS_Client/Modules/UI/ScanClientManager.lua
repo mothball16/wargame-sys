@@ -3,6 +3,7 @@ local dirClient = require(script.Parent.Parent.Parent.Directory)
 local dir = dirClient.Main
 local validator = dir.Validator.new(script.Name)
 local ScanVisual = require(script.Parent.ScanVisual)
+local GeneralSettings = require(dir.Configs.GeneralConfig)
 --#endregion required
 --[[
 this handles the prompt visuals
@@ -18,10 +19,7 @@ local throttle, throttleVal = 0.2, 0.2
 local ScanClientManager = {}
 local activePrompts = {}
 
--- this would be replaced by whatever settings system you guys have
-local SETTINGS_DEMO = {
-    rotateTowardsCam = false
-}
+
 
 local function _CreateVisual(prompt, id)
     local promptStateType = prompt:GetAttribute(dir.Consts.DOOR_SCAN_VISUAL_ATTR)
@@ -39,9 +37,10 @@ local function _CreateVisual(prompt, id)
         model = scanVisualModel,
         initCF = prompt.Parent.CFrame,
         initState = promptStateType,
-        beamInteractionType = ScanVisual.BeamInteractionType.LockToTrackPart,
+        beamInteractionType = GeneralSettings.ScanVisualBeamInteractionType,
         prompt = prompt,
-        rotateTowardsCam = SETTINGS_DEMO["rotateTowardsCam"],
+        rotateTowardsCam = GeneralSettings.RotatePromptsTowardCamera,
+        rotOffset = CFrame.Angles(math.rad(-GeneralSettings.PromptPitchOffset), 0, 0),
         OnDestroy = function()
             activePrompts[id] = nil
         end

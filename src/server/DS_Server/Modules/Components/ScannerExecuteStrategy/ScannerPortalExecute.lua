@@ -13,7 +13,8 @@ local cache = {}
 local keywords = {
     dir.Consts.ACCESS_ACCEPTED,
     dir.Consts.ACCESS_DENIED,
-    dir.Consts.ACCESS_NEUTRAL
+    dir.Consts.ACCESS_NEUTRAL,
+    dir.Consts.ACCESS_DISABLED,
 }
 
 local function _FindEssentialParts(model: Model)

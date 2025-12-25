@@ -8,5 +8,8 @@ return {
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
-    Main =              require(repl.Directory)
+    Modules =           root.Modules,
+    Main =              require(repl.Directory),
+    ServerSignals =     require(root.Modules.ServerSignals),
+
 }
