@@ -49,9 +49,11 @@ function DoorRoot.new(args, required)
         movingParts = movingParts,
         collidableParts = {},
         scanners = {},
+        transitioning = false,
         lock = false,
         state = DoorRoot.State.Closed,
-        step = 0
+        lockStep = 0,
+        transitionStep = 0
     }, DoorRoot)
 
     -- look 4 promtps
@@ -92,7 +94,10 @@ function DoorRoot.new(args, required)
     -- ensure scripts have an interactable animKey
     instructions["Scriptable"] = instructions["Scriptable"] or instructions["Default"]
 
-    self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, DoorRoot.State.Closed)
+    self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, DoorRoot.State.Closed);
+
+    -- tag the required folder for manager use
+    (self.required :: Model):AddTag(dir.Consts.DOOR_ROOT_TAG)
 
     -- notify listeners
     dirServer.ServerSignals.OnDoorCreated:Fire(self.required)
@@ -101,7 +106,7 @@ end
 
 -- handles user actions w/ rulecheck
 function DoorRoot:Activate(plr, animKey, bypassAuth)
-    if self.lock then
+    if self.lock or self.transitioning then
         return dir.Consts.ACCESS_NEUTRAL
     end
     if not (AuthChecks:Check(plr, self.config.AuthChecks) or bypassAuth) then
@@ -135,9 +140,18 @@ function DoorRoot:PlayAnim(key, sequence)
 end
 
 function DoorRoot:SetLock(lock)
-    self.step = (self.step + 1) % 10000
+    self.lockStep = (self.lockStep + 1) % 10000
+    self.lock = lock
     for _, scanner in self.scanners do
-        scanner:SetLock(lock)
+        scanner:SetLock(self.lock or self.transitioning)
+    end
+end
+
+function DoorRoot:SetTransition(transition)
+    self.transitionStep = (self.transitionStep + 1) % 10000
+    self.transitioning = transition
+    for _, scanner in self.scanners do
+        scanner:SetLock(self.lock or self.transitioning)
     end
 end
 
@@ -145,16 +159,24 @@ end
 function DoorRoot:SetState(newState: string, args: {
     animKey: string
 })
-    self:SetLock(true)
     self.state = newState
+    self:SetTransition(true)
     local animLength = self:PlayAnim(args.animKey, newState)
-    local curStep = self.step
+    local curTransitionStep = self.transitionStep
+    local curLockStep = self.lockStep
+    local transitionIsOneStep =
+        newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose
 
-    -- if door is being opened and under the ForcedAutoClose setting, we don't want to be able to interact w/ it till the process is done
-    if newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose then 
+    if transitionIsOneStep then
         task.delay(animLength, function()
-            if curStep == self.step then
-                self:SetLock(false)
+            if curTransitionStep == self.transitionStep then
+                self:SetTransition(false)
+            end
+        end)
+    else
+        task.delay(self.config.DoorRoot.AutoCloseSeconds + animLength, function()
+            if curTransitionStep == self.transitionStep then
+                self:SetState(DoorRoot.State.Closed, args)
             end
         end)
     end
@@ -163,13 +185,6 @@ function DoorRoot:SetState(newState: string, args: {
     dir.Helpers:Switch (newState) {
         [DoorRoot.State.Opened] = function()
             self:ToggleOpenCollision(true)
-            if self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ManualClose then
-                task.delay(self.config.DoorRoot.AutoCloseSeconds + animLength, function()
-                    if curStep == self.step then
-                        self:SetState(DoorRoot.State.Closed, args)
-                    end
-                end)
-            end
         end,
         [DoorRoot.State.Closed] = function()
             self:ToggleOpenCollision(false)

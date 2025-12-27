@@ -14,16 +14,17 @@ this module is a bit messy because i made this wit OOP in mind before realizing 
 local TweenMoveSequence = {}
 
 local function ParseAnim(config, parts)
+    if not parts then return end
     local anim = {}
     -- grab the instructions to translate into actionable tweens
     for key, stepsForPart in pairs(config) do
         -- grab the parts corresponding to the instructions
-        local partFolder = parts[key]
-        if not parts[key] then
+        local partFolder = parts:FindFirstChild(key)
+        if not partFolder then
             validator:Warn("corresponding part for " .. key .. " instruction doesn't exist, ignoring")
             continue
         end
-        local mover = partFolder["Mover"] and partFolder["Mover"].Value or nil
+        local mover = partFolder:FindFirstChild("Mover") and partFolder["Mover"].Value or nil
         if not mover then
             validator:Warn("mover for " .. key .. " in part folder doesn't exist, ignoring")
             continue

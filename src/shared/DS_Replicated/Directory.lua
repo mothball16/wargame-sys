@@ -17,6 +17,7 @@ return {
     Modules =           modules,
     Assets =            assets,
     Utility =           utility,
+    mOS =               share.mOS_Replicated,
     Events =            require(root.Events),
     Consts =            require(modules.Constants),
     Maid =              require(utility.Maid),

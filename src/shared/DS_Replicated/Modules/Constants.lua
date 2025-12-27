@@ -1,4 +1,5 @@
 return {
+    DOOR_ROOT_TAG = "DS_DoorRoot",
     DOOR_ROOT_IDENTIFIER = "DS_Identifier",
     DOOR_ROOT_STATE_ATTR = "DS_DoorRootState",
     DOOR_SCANNER_PROMPT_TAG = "DS_ScannerPrompt",
