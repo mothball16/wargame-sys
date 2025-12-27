@@ -6,15 +6,23 @@ local consts = require(repl.Configs.Constants)
 --[[
 stores all created objects for lookup/communication
 90% of the usecase for this is just being able to communicate between client and server controllers
-important: this should not be storing objects of other clients because that would just be messy and
-and indicate bad design
 ]]
 local objects = {}
+local objectsByClass = {}
 local ObjectRegistry = {}
 
 function ObjectRegistry:Get(id)
     return objects[id]
 end
+
+function ObjectRegistry:GetRawClassTable(className)
+    if not objectsByClass[className] then
+        objectsByClass[className] = {}
+    end
+    return objectsByClass[className]
+end
+
+
 -- obj here is just the metatable holding everything together
 function ObjectRegistry:Register(obj, required)
     assert(obj["ClassName"], "classname must exist on objs that serve as roots! use ClassName = script.Name in 99% of cases")
@@ -29,17 +37,27 @@ function ObjectRegistry:Register(obj, required)
         .. " already exists in table. Object not added, returning old one.")
         return objects[ident], required
     end
+    -- add to ID registry
     objects[ident] = obj
+    -- add to class registry
+    local classTable = self:GetRawClassTable(obj["ClassName"])
+    classTable[ident] = obj
     return obj, required
 end
 
 function ObjectRegistry:Deregister(required)
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
-    if objects[ident] then
-        objects[ident]:Destroy()
-    end
-    objects[ident] = nil
+    local obj = objects[ident]
+    local classTable = self:GetRawClassTable(obj["ClassName"])
 
+    if obj then
+        obj:Destroy()
+    end
+
+    -- remove from ID registry
+    objects[ident] = nil
+    -- remove from class registry
+    classTable[ident] = nil
 end
 
 function ObjectRegistry:WasRegistered(required)
