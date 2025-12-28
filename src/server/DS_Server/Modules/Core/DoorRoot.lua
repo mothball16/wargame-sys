@@ -79,21 +79,6 @@ function DoorRoot.new(args, required)
         end
     end
 
-    -- set default partmover instructions if not already set
-    local instructions = self.config.PartMover.Instructions
-    if not instructions["Default"] then
-        -- for common names that would equate to default
-        instructions["Default"] = instructions["Open"] or instructions["Front"]
-        -- for idiot config
-        if not instructions["Default"] then
-            warn("door should have a default PartMover instruction for script interactions, using a random key (BAD)")
-            warn(args)
-            instructions["Default"] = next(instructions)
-        end
-    end
-    -- ensure scripts have an interactable animKey
-    instructions["Scriptable"] = instructions["Scriptable"] or instructions["Default"]
-
     self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, DoorRoot.State.Closed);
 
     -- tag the required folder for manager use
@@ -129,14 +114,15 @@ function DoorRoot:Activate(plr, animKey, bypassAuth)
 end
 
 
-function DoorRoot:PlayAnim(key, sequence)
+function DoorRoot:SetAnim(key, sequence)
     local animKey = assert(self.config.PartMover.Instructions[key], "anim key " .. key .. " missing")
     local animSequence = animKey[sequence]
     if not animSequence then
         validator:Warn("animsequence " .. sequence .. " missing from anim key " .. key)
         return
     end
-    return TweenMoveSequence:ExecuteOnServer(animSequence, self.movingParts)
+    self.required:SetAttribute(dir.Consts.DOOR_ROOT_LAST_ANIMKEY_ATTR, key)
+    return TweenMoveSequence:GetAnimLength(animSequence)
 end
 
 function DoorRoot:SetLock(lock)
@@ -159,21 +145,26 @@ end
 function DoorRoot:SetState(newState: string, args: {
     animKey: string
 })
+    local animLength = self:SetAnim(args.animKey, newState)
     self.state = newState
+    self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, newState)
     self:SetTransition(true)
-    local animLength = self:PlayAnim(args.animKey, newState)
+
     local curTransitionStep = self.transitionStep
-    local curLockStep = self.lockStep
+    -- local curLockStep = self.lockStep
     local transitionIsOneStep =
         newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose
-
+    local autoClose = newState == DoorRoot.State.Opened
+            and self.config.DoorRoot.CloseType == DoorRoot.CloseType.AutoClose 
+            or self.config.DoorRoot.CloseType == DoorRoot.CloseType.ForcedAutoClose
     if transitionIsOneStep then
         task.delay(animLength, function()
             if curTransitionStep == self.transitionStep then
                 self:SetTransition(false)
             end
         end)
-    else
+    end
+    if autoClose then
         task.delay(self.config.DoorRoot.AutoCloseSeconds + animLength, function()
             if curTransitionStep == self.transitionStep then
                 self:SetState(DoorRoot.State.Closed, args)
@@ -181,7 +172,6 @@ function DoorRoot:SetState(newState: string, args: {
         end)
     end
 
-    self.required:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, newState)
     dir.Helpers:Switch (newState) {
         [DoorRoot.State.Opened] = function()
             self:ToggleOpenCollision(true)

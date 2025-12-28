@@ -13,9 +13,12 @@ this module is a bit messy because i made this wit OOP in mind before realizing 
 
 local TweenMoveSequence = {}
 
-local function ParseAnim(config, parts)
-    if not parts then return end
-    local anim = {}
+-- helper cause parseanim and getanimendstate use the same iteraiton logic
+local function ForEachMover(config, parts, fn)
+    if not parts then
+        warn("no parts?")
+        return
+    end
     -- grab the instructions to translate into actionable tweens
     for key, stepsForPart in pairs(config) do
         -- grab the parts corresponding to the instructions
@@ -29,10 +32,13 @@ local function ParseAnim(config, parts)
             validator:Warn("mover for " .. key .. " in part folder doesn't exist, ignoring")
             continue
         end
-        ---------------------------------------------------------------
+        fn(key, stepsForPart, partFolder, mover)
+    end
+end
 
-        -- translate the two into tweens that use the part as the instance
-        -- and the instruction as the info/move
+local function ParseAnim(config, parts)
+    local anim = {}
+    ForEachMover(config, parts, function(key, stepsForPart, partFolder, mover)
         for timeOf, step in pairs(stepsForPart) do
             local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key).Value
             local sound = step.sound[1] and SFX:FindFirstChild(step.sound[1]) or nil
@@ -51,11 +57,33 @@ local function ParseAnim(config, parts)
                 soundParent = soundParent
             })
         end
-    end
+    end)
     return anim
 end
 
-local function GetAnimLength(config)
+local function GetAnimEndState(config, parts)
+    local partStates = {}
+    ForEachMover(config, parts, function(key, stepsForPart, partFolder, mover)
+        local lastTime = -math.huge
+        local lastCF
+
+        for timeOf, step in pairs(stepsForPart) do
+            if timeOf > lastTime then
+                lastTime = timeOf
+                local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key).Value
+                lastCF = to.CFrame
+            end
+        end
+
+        if lastCF then
+            partStates[mover] = lastCF
+        end
+    end)
+
+    return partStates
+end
+
+function TweenMoveSequence:GetAnimLength(config)
     local maxTime = 0
     for _, stepsForPart in pairs(config) do
         for timeOf, step in pairs(stepsForPart) do
@@ -67,7 +95,7 @@ end
 
 function TweenMoveSequence:ExecuteOnServer(config, parts)
     dir.NetUtils:FireAllClients(dir.Events.Reliable.PlayAnimation, config, parts)
-    return GetAnimLength(config)
+    return self:GetAnimLength(config)
 end
 
 function TweenMoveSequence:ExecuteOnClient(config, parts)
@@ -98,8 +126,13 @@ function TweenMoveSequence:ExecuteOnClient(config, parts)
             end
         end)
     end
-
     return onFinish
+end
+
+function TweenMoveSequence:ExecuteOnClientImmediate(config, parts)
+    for part, cf in pairs(GetAnimEndState(config, parts)) do
+        part.CFrame = cf
+    end
 end
 
 return TweenMoveSequence
