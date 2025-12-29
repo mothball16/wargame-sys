@@ -1,6 +1,7 @@
 -- this is only to be run thru the command line !! : o
 local serverModules = game.ServerScriptService.Server.DS_Server.Modules
 local repl = game.ReplicatedStorage.Shared.DS_Replicated
+local ScannerTemplates = repl.Assets.Models.ScannerTemplates
 local MountStrategies = serverModules.Components.ScannerMountStrategy
 local ExecStrategies = serverModules.Components.ScannerExecuteStrategy
 local DoorRoot = require(serverModules.Core.DoorRoot)
@@ -44,10 +45,10 @@ export type DoorConfig = {
     },
     AuthChecks: {any}, --TODO: gen authcheck conf.
 	Scanner: {
+        Template: %s,
         OnUseStrategy: %s,
         OnMountStrategy: %s,
         ScanVisual: string,
-        Template: string,
         DisplayPrompt: boolean,
         UseThrottle: number
     },
@@ -59,12 +60,12 @@ export type DoorConfig = {
 
 return DoorConfig
 ]]
-
+    local scannerTemplates = MakeStringFromInstNames(ScannerTemplates:GetChildren())
     local execStrategies = MakeStringFromInstNames(ExecStrategies:GetChildren())
     local mountStrategies = MakeStringFromInstNames(MountStrategies:GetChildren())
     local doorCloseTypes = MakeStringFromTbl(DoorRoot.CloseType)
     
-    local final = string.format(template, doorCloseTypes, execStrategies, mountStrategies)
+    local final = string.format(template, doorCloseTypes, scannerTemplates, execStrategies, mountStrategies)
     return final
 end
 

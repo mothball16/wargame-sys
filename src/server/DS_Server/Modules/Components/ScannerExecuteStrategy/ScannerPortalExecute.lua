@@ -46,6 +46,12 @@ function ScannerPortalExecute:ToggleOn(thing, keyword)
         ["Sound"] = function()
             (thing :: Sound):Play()
         end,
+        ["BasePart"] = function()
+            (thing :: BasePart).Transparency = 0
+        end,
+        ["MeshPart"] = function()
+            (thing :: BasePart).Transparency = 0
+        end,
         default = function() end
     }
 end
@@ -62,6 +68,12 @@ function ScannerPortalExecute:ToggleOff(thing, keyword)
             for _, v in ipairs(thing:GetChildren()) do
                 self:ToggleOff(v, keyword)
             end
+        end,
+        ["BasePart"] = function()
+            (thing :: BasePart).Transparency = 1
+        end,
+        ["MeshPart"] = function()
+            (thing :: BasePart).Transparency = 1
         end,
         default = function() end
     }

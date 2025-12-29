@@ -155,12 +155,12 @@ function DoorRoot:SetState(newState: string, args: {
     local transitionIsOneStep =
         newState ~= DoorRoot.State.Opened or self.config.DoorRoot.CloseType ~= DoorRoot.CloseType.ForcedAutoClose
     local autoClose = newState == DoorRoot.State.Opened
-            and self.config.DoorRoot.CloseType == DoorRoot.CloseType.AutoClose 
-            or self.config.DoorRoot.CloseType == DoorRoot.CloseType.ForcedAutoClose
+            and (self.config.DoorRoot.CloseType == DoorRoot.CloseType.AutoClose or self.config.DoorRoot.CloseType == DoorRoot.CloseType.ForcedAutoClose)
     if transitionIsOneStep then
         task.delay(animLength, function()
             if curTransitionStep == self.transitionStep then
                 self:SetTransition(false)
+                curTransitionStep += 1
             end
         end)
     end

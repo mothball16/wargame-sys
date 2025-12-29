@@ -19,10 +19,10 @@ export type DoorConfig = {
     },
     AuthChecks: {any}, --TODO: gen authcheck conf.
 	Scanner: {
+        Template: "HiddenScanner" | "DefaultScanner" | "RFIDScanner",
         OnUseStrategy: "ScannerPortalExecute" | "ScannerHiddenExecute",
         OnMountStrategy: "ScannerManualMount" | "ScannerAutoMount",
         ScanVisual: string,
-        Template: string,
         DisplayPrompt: boolean,
         UseThrottle: number
     },

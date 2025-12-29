@@ -1,8 +1,12 @@
-local source = require(game.ServerScriptService.Server.DS_Server.Directory)
-local DoorRoot = require(source.Modules.Core.DoorRoot)
-local DoorService = require(source.Modules.Core.DoorService)
-local DoorTest = script.Parent.Door.Value
+local dirServer = require(game.ServerScriptService.Server.DS_Server.Directory)
+local dir = dirServer.Main
 
+
+
+local DoorRoot = require(dirServer.Modules.Core.DoorRoot)
+local DoorService = require(dirServer.Modules.Core.DoorService)
+local DoorTest = script.Parent.Door.Value
+local DisplayTest = script.Parent.Display.Value
 
 local function SetLockdown(active)
     local doors = DoorService:QueryAll()
@@ -18,56 +22,50 @@ local function SetLockdown(active)
     end
 end
 
+local lockdown = false
+local singleDoorOpen = false
+local singleDoorLocked = false
+local attributeDoorOpen = false
 
-task.wait(4)
-
-
-warn("= = = = door manager single interaction = = = =")
-
-warn("explicit open test")
-DoorService:SetDoorState(DoorTest, DoorRoot.State.Opened)
-task.wait(2)
-
-warn("explicit close test before animation is done")
-DoorService:SetDoorState(DoorTest, DoorRoot.State.Closed)
-task.wait(2)
-
-
-
-warn("= = = = direct interaction with door object = = = =")
 local DoorTestObject = DoorService:GetDoor(DoorTest) :: typeof(DoorRoot)
-warn("lock test")
-DoorTestObject:SetLock(true)
-task.wait(2)
-
-warn("unlock test")
-DoorTestObject:SetLock(false)
-task.wait(2)
-
-
-warn("= = = = door manager interaction by attribute = = = =")
-
--- open by attribute value test
-warn("open by attribute test")
 local doorTestDoors = DoorService:QueryForValue("DoorTest")
-for _, v in pairs(doorTestDoors) do
-    DoorService:SetDoorState(v, DoorRoot.State.Opened)
+
+local function SetString()
+    local statusString = string.format([[
+[T] lockdown: %*
+[Y] attr. open: %*
+[G] single open: %*
+[H] single lock: %*
+(R -> toggle promptrotate style)
+follow this label for StreamingEnabled test
+    ]], lockdown, attributeDoorOpen, singleDoorOpen, singleDoorLocked)
+
+    DisplayTest.Text = statusString
 end
-task.wait(2)
 
--- close by attribute value test
-warn("close by attribute test")
-for _, v in pairs(doorTestDoors) do
-    DoorService:SetDoorState(v, DoorRoot.State.Closed)
-end
-task.wait(2)
+dir.Net:Connect(dir.Events.Reliable.RunTest, function(plr, evt, args)
+    warn("executing " .. evt .. "...")
+    dir.Helpers:Switch (evt) {
+        ["ToggleLockdown"] = function()
+            lockdown = not lockdown
+            SetLockdown(lockdown)
+        end,
+        ["ToggleByAttribute"] = function()
+            attributeDoorOpen = not attributeDoorOpen
+            for _, v in pairs(doorTestDoors) do
+                DoorService:SetDoorState(v, attributeDoorOpen and DoorRoot.State.Opened or DoorRoot.State.Closed)
+            end
+        end,
+        ["ToggleSingleDoor"] = function()
+            singleDoorOpen = not singleDoorOpen
+            DoorService:SetDoorState(DoorTest, singleDoorOpen and DoorRoot.State.Opened or DoorRoot.State.Closed)
+        end,
+        ["LockSingleDoor"] = function()
+            singleDoorLocked = not singleDoorLocked
+            DoorTestObject:SetLock(singleDoorLocked)
+        end
+    }
+    SetString()
+end)
 
-
--- mock lockdown
-warn("mock lockdown")
-SetLockdown(true)
-task.wait(5)
-
--- mock lockdown
-warn("mock un-lockdown")
-SetLockdown(false)
+SetString()

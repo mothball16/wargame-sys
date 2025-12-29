@@ -12,6 +12,7 @@ end
 
 function AuthChecks:NotLockdownOrAuth(plr)
     -- put your thing here
+    -- UPD: this should be handled externally using an extension to AuthChecks
     warn("not implemented")
     return true
 end

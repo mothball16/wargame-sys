@@ -2,6 +2,7 @@
 local dirServer = require(script.Parent.Parent.Parent.Directory)
 local dir = dirServer.Main
 local validator = dir.Validator.new(script.Name)
+local ScannerTemplates = dir.Assets.Models.ScannerTemplates
 local UseStrategies = script.Parent.ScannerExecuteStrategy
 local MountStrategies = script.Parent.ScannerMountStrategy
 --#endregion required
@@ -87,7 +88,7 @@ end
 
 function Scanner:Mount()
     -- setup da model
-    local template = dir.Assets.Models:FindFirstChild(self.config.Template)
+    local template = ScannerTemplates:FindFirstChild(self.config.Template)
     if not template then
         validator:Error("model not found in assets (" .. self.config.template .. ")")
     end

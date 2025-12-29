@@ -26,7 +26,8 @@
         "Client": {
           "$className": "Folder",
           "mOS_Client": { "$path": "src/client/mOS_Client" },
-          "DS_Client": { "$path": "src/client/DS_Client" }
+          "DS_Client": { "$path": "src/client/DS_Client" },
+          "DS_Test": { "$path": "src/client/DS_Test" }
         }
       }
     },

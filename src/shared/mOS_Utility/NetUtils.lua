@@ -68,6 +68,11 @@ function NetUtils:FireAllClients(eventName, ...)
     self:FireOtherClients(nil, eventName, ...)
 end
 
+function NetUtils:FireServer(eventName, ...)
+    local event = validator:Exists(self:GetEvent(eventName), "event: ".. tostring(eventName))
+    event:FireServer(...)
+end
+
 function NetUtils:FireClient(plr, eventName, ...)
     local event = validator:Exists(self:GetEvent(eventName), "event: ".. tostring(eventName))
     event:FireClient(plr, ...)
