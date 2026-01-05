@@ -7,12 +7,14 @@ local validator = dir.Validator.new(script.Name)
 local SSS = game.ServerScriptService
 --#endregion required
 --[[
-This is the purpose of this script.
+connects FXActivate to the lockdown updated evt
 ]]
 local audio = dir.Assets.Sounds.Lockdown
+
 local fallbacks = {
 
 }
+
 local LockdownNotifierRoot = {}
 LockdownNotifierRoot.__index = LockdownNotifierRoot
 
@@ -24,13 +26,14 @@ LockdownNotifierRoot.State = {
 }
 
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local parts = validator:IsOfClass("Parts", "Folder")
     
 end
 
 
 function LockdownNotifierRoot.new(args, required)
+    local parts = GetRequiredComponents(required)
     local self = setmetatable({
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         maid = dir.Maid.new(),
@@ -44,7 +47,7 @@ function LockdownNotifierRoot:Mount()
     self.maid:GiveTasks(OnLockdownUpdated:Connect(function(isLockdown)
         if isLockdown == true then
             for id, args in pairs(self.config.OnStart.Audio) do
-
+                FX.Activate:ExecuteOnServer()
             end
             -- for id, args in pairs(self.config.OnStart.Sequences) do end
         else

@@ -32,7 +32,7 @@ local PTState = {
 local PTMachineRoot = {}
 PTMachineRoot.__index = PTMachineRoot
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local handler = require(validator:ValueIsOfClass(required:FindFirstChild("PTHandler"), "ModuleScript"))
     local anchor = validator:ValueIsOfClass(required:FindFirstChild("Anchor"))
     local char = validator:Exists(player.Character, "pchar")
@@ -40,7 +40,7 @@ local function _checkSetup(required)
 end
 
 function PTMachineRoot.new(args, required)
-    local handler, anchor, char = _checkSetup(required)
+    local handler, anchor, char = GetRequiredComponents(required)
     local self = setmetatable({
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         maid = dir.Maid.new(),

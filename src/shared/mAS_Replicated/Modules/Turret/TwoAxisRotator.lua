@@ -30,7 +30,7 @@ local fallbacks = {
 local TwoAxisRotator = {}
 TwoAxisRotator.__index = TwoAxisRotator
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local state = validator:IsOfClass(
         required:FindFirstChild("TwoAxisRotatorState"), "Folder")
     local rotMotor = validator:ValueIsOfClass(
@@ -51,7 +51,7 @@ end
 
 -- (args, required)
 function TwoAxisRotator.new(args, required)
-    local rotMotor, pitchMotor, state, rotAudio = _checkSetup(required)
+    local rotMotor, pitchMotor, state, rotAudio = GetRequiredComponents(required)
     local self = setmetatable({
         maid = dir.Maid.new(),
         config = dir.Helpers:TableOverwrite(fallbacks, args),

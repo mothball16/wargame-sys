@@ -18,7 +18,7 @@ local fallbacks = {
 local AimToMouseJoystick = {}
 AimToMouseJoystick.__index = AimToMouseJoystick
 
-local function _checkSetup()
+local function GetRequiredComponents()
     
 end
 

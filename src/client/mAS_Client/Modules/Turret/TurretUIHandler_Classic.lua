@@ -44,7 +44,7 @@ local function _setupComponents(args, required)
     return canvas, components
 end
 
-local function _checkSetup(args)
+local function GetRequiredComponents(args)
     
 end
 

@@ -10,7 +10,7 @@ aka the fucking cheater script
 local component = {}
 component.__index = component
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 function component.new(args, required)

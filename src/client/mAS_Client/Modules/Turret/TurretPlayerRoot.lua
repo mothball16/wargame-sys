@@ -15,7 +15,7 @@ TurretPlayerRoot.__index = TurretPlayerRoot
 
 
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local uiHandler = require(validator:ValueIsOfClass(required:FindFirstChild("UIHandler"), "ModuleScript"))
     validator:Exists(uiHandler.new, "constructor of UI handler")
     validator:Exists(uiHandler.Update, "update of UI handler")
@@ -29,7 +29,7 @@ function TurretPlayerRoot:Destroy()
 end
 
 function TurretPlayerRoot.new(args, required)
-    local uiHandler = _checkSetup(required)
+    local uiHandler = GetRequiredComponents(required)
 
     local self = setmetatable({}, TurretPlayerRoot)
     self.maid = dir.Maid.new()

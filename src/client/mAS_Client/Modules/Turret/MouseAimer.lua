@@ -12,11 +12,11 @@ Gyroscope.__index = Gyroscope
 
 local fallbacks = {}
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     return validator:ValueIsOfClass("MouseAimerBase", "BasePart")
 end
 function Gyroscope.new(args, required)
-    local gyro = _checkSetup(required)
+    local gyro = GetRequiredComponents(required)
     local self = setmetatable({}, Gyroscope)
     self.config = dir.Helpers:TableOverwrite(fallbacks, args)
     

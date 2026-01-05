@@ -34,7 +34,7 @@ local fallbacks: args = {
     loop = false,
 }
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 function component.new(args, _)

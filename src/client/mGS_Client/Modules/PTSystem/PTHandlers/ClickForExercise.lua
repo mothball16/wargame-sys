@@ -16,7 +16,7 @@ local fallbacks = {
 local ClickOnly = {}
 ClickOnly.__index = ClickOnly
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 function ClickOnly.new(args, required)

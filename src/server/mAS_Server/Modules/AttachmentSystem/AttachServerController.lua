@@ -21,7 +21,7 @@ local fallbacks = {
 }
 
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local attachInteractionPoint = validator:ValueIsOfClass(required:FindFirstChild("AttachInteractionPoint"), "BasePart")
     return attachInteractionPoint
 end
@@ -33,7 +33,7 @@ function AttachServerController.new(args, required)
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         selector = AttachSelector.new(args, required),
         required = required,
-        attachInteractionPoint = _checkSetup(required),
+        attachInteractionPoint = GetRequiredComponents(required),
         proxInUse = false
     }, AttachServerController)
 

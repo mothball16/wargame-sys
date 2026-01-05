@@ -37,7 +37,7 @@ local fallbacks = {
     rotOffset = CFrame.Angles(math.rad(-15), 0, 0)
 }
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local backgroundFolder = validator:IsOfClass(required:FindFirstChild("Background"), "Folder")
     local background = {}
     for _, v in pairs(backgroundFolder:GetChildren()) do
@@ -81,7 +81,7 @@ function ScanVisual.new(args, required)
     local
         background, beam, beamAttach, canvas,
         buttonText, actionText, progressBar,
-        parallaxBase, rotWeld = _checkSetup(required)
+        parallaxBase, rotWeld = GetRequiredComponents(required)
 
     local toTrack = plr.Character and plr.Character:FindFirstChild(TRACK_PART) or nil
     local self = setmetatable({

@@ -63,7 +63,7 @@ component.__index = component
 
 -- this isn't necessary, but ideally you want to put all assertions and extraction of info from required here
 -- this way the constructor isnt filled with that and your code fails fast if not properly setup
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 

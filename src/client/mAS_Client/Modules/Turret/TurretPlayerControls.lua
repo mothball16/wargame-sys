@@ -25,7 +25,7 @@ export type TurretPlayerControls = {
 	controller: TurretClientBase.TurretClientBase
 }
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
 	local joystick = require(validator:ValueIsOfClass(required:FindFirstChild("Joystick"), "ModuleScript"))
 	validator:Exists(joystick.GetInput, "GetInput function of joystick")
 	validator:Exists(joystick.CanEnable, "CanEnable function of joystick")
@@ -39,7 +39,7 @@ function TurretPlayerControls.new(args: {
 	joystick: any,
 
 }, required)
-	local joystick = _checkSetup(required)
+	local joystick = GetRequiredComponents(required)
 
     local self = setmetatable({
 		rotationMult = 1,

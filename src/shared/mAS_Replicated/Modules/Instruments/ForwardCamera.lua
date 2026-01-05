@@ -15,11 +15,11 @@ local fallbacks = {
 
 }
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     return validator:ValueIsOfClass(required:FindFirstChild("Camera"), "BasePart")
 end
 function ForwardCamera.new(args, required)
-    local cam = _checkSetup(required)
+    local cam = GetRequiredComponents(required)
     local self = setmetatable({}, ForwardCamera)
     self.config = dir.Helpers:TableOverwrite(fallbacks, args)
     self.cam = cam

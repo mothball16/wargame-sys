@@ -10,7 +10,7 @@ This is the purpose of this script.
 local component = {}
 component.__index = component
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 function component.new(args, required)

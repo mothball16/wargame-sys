@@ -74,7 +74,7 @@ export type TurretClientBase = {
 
 --#region init
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
 
 end
 

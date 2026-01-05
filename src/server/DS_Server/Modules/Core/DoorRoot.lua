@@ -32,14 +32,14 @@ local fallbacks = {
     },
 }
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     local partMover = validator:IsOfClass(required:FindFirstChild("PartMover"), "Folder")
     local scannerDirectory = validator:IsOfClass(required:FindFirstChild("Scanners"), "Folder")
     return partMover, scannerDirectory
 end
 
 function DoorRoot.new(args, required)
-    local movingParts, scannerDirectory = _checkSetup(required)
+    local movingParts, scannerDirectory = GetRequiredComponents(required)
     local self = setmetatable({
         ClassName = script.Name,
         required = required,

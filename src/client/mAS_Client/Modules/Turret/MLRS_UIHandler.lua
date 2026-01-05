@@ -91,7 +91,7 @@ local function _setupComponents(args, required)
     return canvas, components, mainTabs
 end
 
-local function _checkSetup(args)
+local function GetRequiredComponents(args)
     
 end
 

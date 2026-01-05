@@ -13,7 +13,7 @@ local fallbacks = {}
 local AttachmentTool = {}
 AttachmentTool.__index = AttachmentTool
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     return
 end
 

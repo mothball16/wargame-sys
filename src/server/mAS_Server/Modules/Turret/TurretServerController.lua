@@ -14,7 +14,7 @@ this is what players interact with regarding the rack
 local TurretServerController = {}
 TurretServerController.__index = TurretServerController
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     
 end
 

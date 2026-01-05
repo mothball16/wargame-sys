@@ -15,7 +15,7 @@ AttachSelector.__index = AttachSelector
 --local SLOT_TYPE_ATTR = "SlotType"
 local fallbacks = {}
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
 	local attachPoints = validator:ValueIsOfClass(required:FindFirstChild("AttachPoints"), "Folder")
 	local slotsByIndex = {}
 	
@@ -35,7 +35,7 @@ end
 
 -- (args, required)
 function AttachSelector.new(args, required)
-	local attachPoints, slotsByIndex, slotsByType = _checkSetup(required)
+	local attachPoints, slotsByIndex, slotsByType = GetRequiredComponents(required)
 	local self = setmetatable({}, AttachSelector)
 	self.config = dir.Helpers:TableOverwrite(fallbacks, args)
 	self.attachPoints = attachPoints

@@ -13,12 +13,12 @@ local REVERSE = false -- is compass going in the wrong direction (is clockwise r
 local OrientationReader = {}
 OrientationReader.__index = OrientationReader
 
-local function _checkSetup(required)
+local function GetRequiredComponents(required)
     return validator:ValueIsOfClass(required:FindFirstChild("OrientationReader"), "BasePart")
 end
 function OrientationReader.new(args, required)
     local self = setmetatable({}, OrientationReader)
-    self.main = _checkSetup(required)
+    self.main = GetRequiredComponents(required)
     return self
 end
 
