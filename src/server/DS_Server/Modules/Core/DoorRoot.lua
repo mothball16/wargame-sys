@@ -57,9 +57,14 @@ function DoorRoot.new(args, required)
     }, DoorRoot)
 
     -- look 4 promtps
-    for _, scannerEntry in scannerDirectory:GetChildren() do
-        local moverKey = scannerEntry.Name
-        local promptInstance = scannerEntry.Value :: ProximityPrompt
+    for _, scannerPart: BasePart in scannerDirectory:GetChildren() do
+        local moverKey = scannerPart.Name
+        local promptInstance = scannerPart:FindFirstChildOfClass("ProximityPrompt")
+        if not promptInstance then
+            warn(string.format("prompt instance in part %s doesn't exist on object GUID %s, skippng scanner init",
+                moverKey, self.id))
+            continue
+        end
         table.insert(self.scanners, Scanner.new(dir.Helpers:TableCombineNew(
             self.config.Scanner, {
             prompt = promptInstance,
@@ -71,7 +76,7 @@ function DoorRoot.new(args, required)
 
     -- cache parts to setcollide (TODO: use collisiongroups instead)
     for _, movingPart in pairs(self.movingParts:GetChildren()) do
-        local mover = movingPart.Mover.Value
+        local mover = movingPart:FindFirstChild("Mover")
         for _, v in pairs(mover:GetChildren()) do
             if v:IsA("Weld") and v.Part1 and v.Part1.CanCollide == true then
                 table.insert(self.collidableParts, v.Part1)
@@ -142,6 +147,7 @@ function DoorRoot:SetTransition(transition)
 end
 
 -- sets door state and plays provided transition code
+-- TODO: refactor to use Opening/Closing states instead of weird step checking
 function DoorRoot:SetState(newState: string, args: {
     animKey: string
 })
@@ -177,7 +183,11 @@ function DoorRoot:SetState(newState: string, args: {
             self:ToggleOpenCollision(true)
         end,
         [DoorRoot.State.Closed] = function()
-            self:ToggleOpenCollision(false)
+            task.delay(animLength, function()
+                if curTransitionStep == self.transitionStep then
+                    self:ToggleOpenCollision(false)
+                end
+            end)
         end,
         [DoorRoot.State.Broken] = function()
             self:ToggleOpenCollision(true)

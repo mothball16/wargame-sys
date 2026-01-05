@@ -1,4 +1,6 @@
 return {
+    LOCKDOWN_ATTR = "DS_Lockdown",
+
     DOOR_ROOT_TAG = "DS_DoorRoot",
     DOOR_ROOT_IDENTIFIER = "DS_Identifier",
     DOOR_ROOT_STATE_ATTR = "DS_DoorRootState",

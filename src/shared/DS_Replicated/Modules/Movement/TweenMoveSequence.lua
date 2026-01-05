@@ -27,7 +27,7 @@ local function ForEachMover(config, parts, fn)
             validator:Warn("corresponding part for " .. key .. " instruction doesn't exist, ignoring")
             continue
         end
-        local mover = partFolder:FindFirstChild("Mover") and partFolder["Mover"].Value or nil
+        local mover = partFolder:FindFirstChild("Mover") or nil
         if not mover then
             validator:Warn("mover for " .. key .. " in part folder doesn't exist, ignoring")
             continue
@@ -40,7 +40,7 @@ local function ParseAnim(config, parts)
     local anim = {}
     ForEachMover(config, parts, function(key, stepsForPart, partFolder, mover)
         for timeOf, step in pairs(stepsForPart) do
-            local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key).Value
+            local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key)
             local sound = step.sound[1] and SFX:FindFirstChild(step.sound[1]) or nil
             local soundParent = step.sound[2] and partFolder:FindFirstChild(step.sound[2]) or mover
             if step.sound[1] and not sound then
@@ -87,7 +87,7 @@ function TweenMoveSequence:GetAnimLength(config)
     local maxTime = 0
     for _, stepsForPart in pairs(config) do
         for timeOf, step in pairs(stepsForPart) do
-            maxTime = math.max(maxTime, timeOf + step.info[1] or 0) --step.info[1] is the tween time
+            maxTime = math.max(maxTime, timeOf + (step.info[1] or 0)) --step.info[1] is the tween time
         end
     end
     return maxTime
