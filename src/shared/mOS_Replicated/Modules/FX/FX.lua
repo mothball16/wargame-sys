@@ -9,7 +9,7 @@ Create - plays a particle bundle at a location, not an existing object. can only
 Preserve - intercepts and reparents particle holders right before destruction
 ]]
 return {
-    Activate = FXActivator,
-    Create = FXCreator,
-    Preserve = FXPreserve
+    Activate = FXActivator :: typeof(FXActivator),
+    Create = FXCreator :: typeof(FXCreator),
+    Preserve = FXPreserve :: typeof(FXPreserve)
 }
