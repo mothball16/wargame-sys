@@ -51,7 +51,8 @@ function NetUtils:GetObject(id)
 end
 
 function NetUtils:GetObjectFromRequired(required)
-    return self:GetObject(self:GetId(required))
+    local id = required and self:GetId(required) or nil
+    return id and self:GetObject(id) or nil
 end
 
 

@@ -26,7 +26,7 @@ DoorRoot.State = {
 
 local fallbacks = {
     DoorRoot = {
-        DisableCollisionOnOpen = true,
+        DoorClipsDuringAnim = true,
         CloseType = DoorRoot.CloseType.AutoClose,
         AutoCloseSeconds = 3,
     },
@@ -196,7 +196,7 @@ function DoorRoot:SetState(newState: string, args: {
 end
 
 function DoorRoot:ToggleOpenCollision(open)
-    if self.config.DoorRoot.DisableCollisionOnOpen then
+    if not self.config.DoorRoot.DoorClipsDuringAnim then
         for _, v in pairs(self.collidableParts) do
             v.CanCollide = not open
         end

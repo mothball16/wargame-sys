@@ -4,11 +4,15 @@ local repl = game.ReplicatedStorage.Shared.DS_Replicated
 local ScannerTemplates = repl.Assets.Models.ScannerTemplates
 local MountStrategies = serverModules.Components.ScannerMountStrategy
 local ExecStrategies = serverModules.Components.ScannerExecuteStrategy
+local DoorClasses = repl.Configs.DoorClasses
+local DoorSequences = repl.Configs.DoorSequences
 local DoorRoot = require(serverModules.Core.DoorRoot)
 local target = repl.Configs.DoorConfig
 local function MakeStringFromInstNames(tbl)
     local names = {}
     for _, v in pairs(tbl) do
+        if string.sub(v.Name, 1, 2) == "__" then continue end
+
         table.insert(names, '"' .. v.Name .. '"')
     end
     return table.concat(names, " | ")
@@ -26,7 +30,10 @@ local function CompileDoorConfig()
     local template = [[
 -- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN DOORCONFIGTYPECOMPILER SNIPPET IN CMD LINE
 -- (this will auto-upd DoorConfig. You cant see the change unless you close and re-open doorconfig if working in studio *)
-local DoorConfig = {}
+local dir = require(game.ReplicatedStorage.Shared.DS_Replicated.Directory)
+local builder = require(dir.Modules.DoorSetup.DoorConfigBuilder)
+
+local DoorData = {}
 
 export type TweenKey = {[string]: TweenSequence}
 export type TweenSequence = {[number]: TweenStep}
@@ -39,7 +46,7 @@ export type TweenStep = {
 
 export type DoorConfig = {
 	DoorRoot: {
-        DisableCollisionOnOpen: boolean,
+        DoorClipsDuringAnim: boolean,
         CloseType: %s,
         AutoCloseSeconds: number,
     },
@@ -58,14 +65,34 @@ export type DoorConfig = {
     }
 }
 
-return DoorConfig
+export type DoorSetup = {
+    Classes: {%s},
+    Sequence: {
+        Type: %s,
+        Args: {any}
+    }
+}
+
+DoorData.Build = builder
+
+return DoorData
 ]]
+    local doorCloseTypes = MakeStringFromTbl(DoorRoot.CloseType)
     local scannerTemplates = MakeStringFromInstNames(ScannerTemplates:GetChildren())
     local execStrategies = MakeStringFromInstNames(ExecStrategies:GetChildren())
     local mountStrategies = MakeStringFromInstNames(MountStrategies:GetChildren())
-    local doorCloseTypes = MakeStringFromTbl(DoorRoot.CloseType)
-    
-    local final = string.format(template, doorCloseTypes, scannerTemplates, execStrategies, mountStrategies)
+    local doorClasses = MakeStringFromInstNames(DoorClasses:GetChildren())
+    local doorSequences = MakeStringFromInstNames(DoorSequences:GetChildren())
+
+    local final = string.format(
+        template,
+        doorCloseTypes,
+        scannerTemplates,
+        execStrategies,
+        mountStrategies,
+        doorClasses,
+        doorSequences
+    )
     return final
 end
 

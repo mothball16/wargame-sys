@@ -27,7 +27,7 @@ LockdownNotifierRoot.State = {
 
 
 local function GetRequiredComponents(required)
-    local parts = validator:IsOfClass("Parts", "Folder")
+    local parts = validator:IsOfClass(required:FindFirstChild("Parts"), "Folder")
     
 end
 

@@ -6,48 +6,36 @@ local openTime, closeTime = 3, 3
 
 local config: Door.DoorConfig = {
     DoorRoot = {
-        DisableCollisionOnOpen = false,
-        CloseType = "ManualClose",
+        DoorClipsDuringAnim = true,
+        CloseType = "ForcedAutoClose",
     },
     Scanner = {
+        Template = "HiddenScanner",
         OnMountStrategy = "ScannerManualMount",
-        OnUseStrategy = "ScannerPortalExecute",
+        OnUseStrategy = "ScannerHiddenExecute",
     },
     PartMover = {
         Use = "TweenMoveSequence",
         Instructions = {
             Default = {
                 Open = {
-                    Door1 = {
+                    Door = {
                         [0] = {
                             to = "GoTo",
                             info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
                             sound = {"BlastDoorOpen"}
                         },
                     },
-                    Door2 = {
-                        [0] = {
-                            to = "GoTo",
-                            info = {openTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                            sound = {"BlastDoorOpen"}
-                        },
-                    }
+                    
                 },
                 Close = {
-                    Door1 = {
+                    Door = {
                         [0] = {
                             to = "Orig",
                             info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
                             sound = {"BlastDoorClose"}
                         },
                     },
-                    Door2 = {
-                        [0] = {
-                            to = "Orig",
-                            info = {closeTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut},
-                            sound = {"BlastDoorClose"}
-                        },
-                    }
                 }
             }
         }

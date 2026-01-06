@@ -1,5 +1,5 @@
 --#region required
-local dir = require(script.Parent.Parent.Parent.Directory)
+local dir = require(script.Parent.Parent.Parent.mOS_Replicated.Directory)
 local validator = dir.Validator.new(script.Name)
 --#endregion required
 --[[

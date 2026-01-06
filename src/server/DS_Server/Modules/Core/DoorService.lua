@@ -24,6 +24,9 @@ function DoorService:_OnDestroyed(required)
 end
 
 function DoorService:Init()
+    -- set orig lockdown state
+    game.ServerScriptService:SetAttribute(dir.Consts.LOCKDOWN_ATTR, false)
+
     --init pre-initialized doors
     for _, required in pairs(CS:GetTagged(dir.Consts.DOOR_ROOT_TAG)) do
         self:_OnCreated(required)

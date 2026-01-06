@@ -33,7 +33,15 @@ function ObjectInitializer:Execute(required)
         assert(controllerRef.Value.Parent, "controller of name " .. controllerRef.Value.Name .. "doesn't exist")
 
         local controller = require(controllerRef.Value)
-        local prefab = entryPoint:FindFirstChild("Prefab") and require(entryPoint:FindFirstChild("Prefab").Value) or {}
+        local prefabObj = entryPoint:FindFirstChild("Prefab")
+        local prefabVal = prefabObj and prefabObj.Value or nil
+        local prefab
+        if prefabObj and not prefabVal then
+            validator:Warn(string.format("prefab value doesn't exist for obj %s?", required.Parent.Name))
+            prefab = {}
+        end
+        prefab = prefabVal and require(entryPoint:FindFirstChild("Prefab").Value) or {}
+
         validator:Exists(controller["new"], "new function of obj. controller")
         local obj = controller.new(prefab, required)
 

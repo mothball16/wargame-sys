@@ -1,4 +1,4 @@
-local prefabs = game.ReplicatedStorage.Shared.DS_Replicated.Configs.Prefabs
+local prefabs = game.ReplicatedStorage.Shared.DS_Replicated.Configs.Door
 return function()
     for _, v: ModuleScript in pairs(prefabs:GetChildren()) do
         pcall(function()

@@ -4,7 +4,7 @@
 
 
 [CONFIG]
-DoorRoot.DisableCollisionOnOpen
+DoorRoot.DoorClipsDuringAnim
     -> set to true by default. determines whether doors are cancollide or not during opening
     -> what counts as the door is determined by what is welded to the mover
 DoorRoot.OpenCooldown

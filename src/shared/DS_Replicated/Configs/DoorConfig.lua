@@ -1,6 +1,9 @@
 -- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN DOORCONFIGTYPECOMPILER SNIPPET IN CMD LINE
 -- (this will auto-upd DoorConfig. You cant see the change unless you close and re-open doorconfig if working in studio *)
-local DoorConfig = {}
+local dir = require(game.ReplicatedStorage.Shared.DS_Replicated.Directory)
+local builder = require(dir.Modules.DoorSetup.DoorConfigBuilder)
+
+local DoorData = {}
 
 export type TweenKey = {[string]: TweenSequence}
 export type TweenSequence = {[number]: TweenStep}
@@ -13,7 +16,7 @@ export type TweenStep = {
 
 export type DoorConfig = {
 	DoorRoot: {
-        DisableCollisionOnOpen: boolean,
+        DoorClipsDuringAnim: boolean,
         CloseType: "AutoClose" | "ForcedAutoClose" | "ManualClose",
         AutoCloseSeconds: number,
     },
@@ -32,4 +35,14 @@ export type DoorConfig = {
     }
 }
 
-return DoorConfig
+export type DoorSetup = {
+    Classes: {"Auth_LevelFive" | "Auth_LevelOne" | "CloseType_Auto" | "CloseType_ForcedAuto" | "CloseType_Manual" | "OpenType_Auto" | "OpenType_Manual" | "Scanner_Default" | "Scanner_Hidden" | "Scanner_RFID" | "Behavior_DoorClipsDuringAnim"},
+    Sequence: {
+        Type: "DoubleDoor" | "SingleDirectionalDoor",
+        Args: {any}
+    }
+}
+
+DoorData.Build = builder
+
+return DoorData

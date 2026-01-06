@@ -1,5 +1,5 @@
 --#region required
-local dir = require(script.Parent.Parent.Parent.Directory)
+local dir = require(script.Parent.Parent.Parent.mOS_Replicated.Directory)
 --#endregion required
 --[[
 activates particles on an ALREADY EXISTING object on the server
@@ -30,18 +30,20 @@ local function FireFX(config, FXHolder, disableEffect)
 	for _, fx in pairs(FXHolder:GetChildren()) do
 		local isEmitter = fx:IsA("ParticleEmitter") or fx:IsA("Trail") or fx:IsA("Beam") or fx:IsA("Smoke")
 		local emitLength = fx:GetAttribute("PlayFor") or config["playFor"]
+		local delayLength = fx:GetAttribute("Delay") or config["delay"]
 		maxEmitLength = math.max(maxEmitLength, emitLength)
 		if not disableEffect then
-			if isEmitter then
-				fx.Enabled = true
-
-				task.delay(emitLength, function()
-					fx.Enabled = false
-				end)
-			elseif fx:IsA("Sound") then
-				fx.TimePosition = 0
-				fx:Play()
-			end
+			task.delay(delayLength, function()
+				if isEmitter then
+					fx.Enabled = true
+					task.delay(emitLength, function()
+						fx.Enabled = false
+					end)
+				elseif fx:IsA("Sound") then
+					fx.TimePosition = 0
+					fx:Play()
+				end
+			end)
 		end
 	end
 
@@ -59,9 +61,18 @@ function FXActivator:ExecuteOnClient(config, args)
 	end
 end
 
--- particles should not be played on the server (Bad!!)
--- this just ticks the avoidDestruction so particles aren't prematurely deleted
--- and also tells other clients to replicate
+--[[
+particles should not be played on the server (Bad!!)
+this just ticks the avoidDestruction so particles aren't prematurely deleted
+and also tells other clients to replicate
+
+```
+local FX = require(dir.Utility.FX.FX)
+local fxFolder = script.fxFolder.Value
+-- activates the FX on a part from the server
+FX.Activate:ExecuteOnServer(nil, nil, {object = fxFolder})
+
+]]
 function FXActivator:ExecuteOnServer(plr, config, args)
 	config = dir.Helpers:TableOverwrite(fallbacks, config)
 
