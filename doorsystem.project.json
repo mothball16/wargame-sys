@@ -6,18 +6,18 @@
     "ReplicatedStorage": {
       "Shared": {
         "$className": "Folder",
-        "DS_Replicated": { "$path": "src/shared/DS_Replicated" },
-        "mOS_Replicated": { "$path": "src/shared/mOS_Replicated" },
-        "mOS_Utility": { "$path": "src/shared/mOS_Utility" }
+        "DS_Replicated": { "$path": "src/ReplicatedStorage/DS_Replicated" },
+        "mOS_Replicated": { "$path": "src/ReplicatedStorage/mOS_Replicated" },
+        "mOS_Utility": { "$path": "src/ReplicatedStorage/mOS_Utility" }
       }
     },
 
     "ServerScriptService": {
       "Server": {
         "$className": "Folder",
-        "mOS_Server": { "$path": "src/server/mOS_Server" },
-        "DS_Server": { "$path": "src/server/DS_Server" },
-        "DS_Test": { "$path": "src/server/DS_Test" }
+        "mOS_Server": { "$path": "src/ServerScriptService/mOS_Server" },
+        "DS_Server": { "$path": "src/ServerScriptService/DS_Server" },
+        "DS_Test": { "$path": "src/ServerScriptService/DS_Test" }
       }
     },
 
@@ -25,9 +25,9 @@
       "StarterPlayerScripts": {
         "Client": {
           "$className": "Folder",
-          "mOS_Client": { "$path": "src/client/mOS_Client" },
-          "DS_Client": { "$path": "src/client/DS_Client" },
-          "DS_Test": { "$path": "src/client/DS_Test" }
+          "mOS_Client": { "$path": "src/StarterPlayerScripts/mOS_Client" },
+          "DS_Client": { "$path": "src/StarterPlayerScripts/DS_Client" },
+          "DS_Test": { "$path": "src/StarterPlayerScripts/DS_Test" }
         }
       }
     },

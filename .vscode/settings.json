@@ -7,15 +7,7 @@
             "folderPath": "wargame-systems\\src\\client\\mAS_Client\\Modules\\"
         }
     ],
-    "files.exclude": {
-        "src/client/mAS_Client": true,
-        "src/client/mGS_Client": true,
-        "src/server/mAS_Server": true,
-        "src/server/mGS_Server": true,
-        "src/shared/mAS_Replicated": true,
-        "src/shared/mGS_Replicated": true,
-        "src/shared/mAS_Replicated/Modules/AttachmentSystem": true
-    },
+    "files.exclude": {},
     "folder-scopes.scopes": {
         "DoorSystem": {
             "wargame-systems": {
