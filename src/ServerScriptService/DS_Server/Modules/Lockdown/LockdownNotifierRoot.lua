@@ -1,66 +1,101 @@
 --#region required
 local dirServer = require(script.Parent.Parent.Parent.Directory)
 local dir = dirServer.Main
-local TweenMoveSequence = require(dir.Modules.Movement.TweenMoveSequence)
-local FX = require(dir.Utility.FX.FX)
+--local TweenMoveSequence = require(dir.Modules.Movement.TweenMoveSequence)
+local FX = require(dir.mOS.Modules.FX.FX)
 local validator = dir.Validator.new(script.Name)
-local SSS = game.ServerScriptService
 --#endregion required
 --[[
-connects FXActivate to the lockdown updated evt
+triggers FX activator on the provided event being triggered
+WTF ROBLOX HAS STRING INTERPLOATION???
 ]]
 local audio = dir.Assets.Sounds.Lockdown
+local SSS = game.ServerScriptService
 
 local fallbacks = {
-
+    signal = dir.Consts.LOCKDOWN_ATTR
 }
 
 local LockdownNotifierRoot = {}
 LockdownNotifierRoot.__index = LockdownNotifierRoot
 
-LockdownNotifierRoot.State = {
-    Off = "Off",
---    Activating = "Activating",
-    On = "On",
---    Deactivating = "Deactivating",
-}
-
-
 local function GetRequiredComponents(required)
     local parts = validator:IsOfClass(required:FindFirstChild("Parts"), "Folder")
-    
+    local FXOrigin = validator:IsOfClass(parts:FindFirstChild("FXOrigin"), "BasePart")
+    return parts, FXOrigin
 end
 
 
 function LockdownNotifierRoot.new(args, required)
-    local parts = GetRequiredComponents(required)
+    local parts, FXOrigin: BasePart = GetRequiredComponents(required)
     local self = setmetatable({
+        ClassName = script.Name,
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         maid = dir.Maid.new(),
-        playing = {}
+        parts = parts,
+        state = nil,
+        playing = nil,
     }, LockdownNotifierRoot)
+
+    -- sets up the FX parts for use by FX activator
+    for key, stateFX in pairs(self.config.Instructions) do
+        for substateKey, substateData in pairs(stateFX) do
+            local FXclone = FXOrigin:Clone()
+            FXclone.Parent = parts
+            FXclone.Name = `FXEmit{key}{substateKey}`
+            for _, soundData in ipairs(substateData) do
+                local soundInstance = audio:FindFirstChild(soundData.ID)
+                if not soundInstance then
+                    warn(`sound instance {soundData.ID} not found, skipping`)
+                    continue
+                end
+                local soundClone: Sound = soundInstance:Clone()
+                soundClone.Name = soundData.ID
+                soundClone.Looped = soundData.Looped
+                soundClone:SetAttribute("Delay", soundData.Delay)
+                soundClone.Parent = FXclone
+            end
+        end
+    end
+
+    self:Mount()
     return self
 end
 
 function LockdownNotifierRoot:Mount()
-    local OnLockdownUpdated = SSS:GetAttributeChangedSignal(dir.Consts.LOCKDOWN_ATTR)
-    self.maid:GiveTasks(OnLockdownUpdated:Connect(function(isLockdown)
-        if isLockdown == true then
-            for id, args in pairs(self.config.OnStart.Audio) do
-                FX.Activate:ExecuteOnServer()
-            end
-            -- for id, args in pairs(self.config.OnStart.Sequences) do end
-        else
-            for id, args in pairs(self.config.OnStart.Audio) do
-                
-            end
-            -- for id, args in pairs(self.config.OnStart.Sequences) do end
-        end
+    local OnLockdownUpdated = SSS:GetAttributeChangedSignal(self.config.signal)
+    self.maid:GiveTask(OnLockdownUpdated:Connect(function()
+        local value = SSS:GetAttribute(self.config.signal)
+        self:SetState(value)
     end))
 end
 
+function LockdownNotifierRoot:_StopPlayingFX()
+    if self.playing then
+        for _, v: Sound in pairs(self.playing) do
+            v:Stop()
+        end
+    end
+end
+
 function LockdownNotifierRoot:SetState(state: string)
-    dir.Helpers:Switch ()
+    local lookForKeyword = `FXEmit{state}`
+    if state == self.state then
+        return
+    elseif self.state ~= nil and (state == nil or state == "none") then
+        lookForKeyword = `FXEmit{self.state}End`
+    else
+        lookForKeyword = `FXEmit{state}Start`
+    end
+
+    print(lookForKeyword)
+    self:_StopPlayingFX()
+    self.playing = FX.Activate:ExecuteOnServer(nil, {lookFor = lookForKeyword}, {object = self.parts})
+    self.state = state
+end
+
+function LockdownNotifierRoot:Destroy()
+    self.maid:Destroy()
 end
 
 return LockdownNotifierRoot

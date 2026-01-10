@@ -1,7 +1,7 @@
 local CS = game:GetService("CollectionService")
 local dirServer = require(script.Parent.Parent.Parent.Directory)
 local dir = dirServer.Main
-local AttributeIndexer = require(dir.Utility.Caching.AttributeIndexer)
+local AttributeIndexer = require(dir.mOS.Modules.Caching.AttributeIndexer)
 local DoorRoot = require(dirServer.Root.Modules.Core.DoorRoot)
 
 local DoorService = {
@@ -25,7 +25,7 @@ end
 
 function DoorService:Init()
     -- set orig lockdown state
-    game.ServerScriptService:SetAttribute(dir.Consts.LOCKDOWN_ATTR, false)
+    game.ServerScriptService:SetAttribute(dir.Consts.LOCKDOWN_ATTR, "none")
 
     --init pre-initialized doors
     for _, required in pairs(CS:GetTagged(dir.Consts.DOOR_ROOT_TAG)) do

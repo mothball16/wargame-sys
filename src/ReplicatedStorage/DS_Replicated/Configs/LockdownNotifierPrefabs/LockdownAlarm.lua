@@ -1,16 +1,25 @@
 return {
-    OnStart = {
-        Audio = {
-            {
-                ID = "Lockdown",
-                Looped = true,
-                Delay = 3
+    Instructions = {
+        Lockdown = {
+            Start = {
+                {
+                    ID = "LockdownLoop",
+                    Looped = true,
+                    Delay = 0
+                },
+                {
+                    ID = "LockdownStart",
+                    Looped = false,
+                    Delay = 0
+                }
+            },
+            End = {
+                {
+                    ID = "LockdownEnd",
+                    Looped = false,
+                    Delay = 0
+                }
             }
-        }
-    },
-    OnEnd = {
-        Audio = {
-
-        }
+        },
     }
 }

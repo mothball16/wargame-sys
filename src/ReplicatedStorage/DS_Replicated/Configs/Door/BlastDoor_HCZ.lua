@@ -1,12 +1,11 @@
 local Door = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
+local _, Base = require(script.Parent.BlastDoor)
 
 local BlastDoor: Door.DoorSetup = {
     Classes = {
-        "Auth_LevelOne",
-        "CloseType_Manual", "OpenType_Manual",
-
-        "Scanner_RFID",
-        "Behavior_DoorClipsDuringAnim",
+        table.unpack(Base.Classes),
+        "Auth_LevelFive",
+        "CloseType_Auto"
     },
     Sequence = {
         Type = "DoubleDoor",
