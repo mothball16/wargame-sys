@@ -1,8 +1,11 @@
 local bootstrapper = {}
 local modules = script.Parent.Modules
-local ObjectHandler = require(modules.Core.ObjectHandler)
+local dirClient = require(script.Parent.Directory)
+local dir = dirClient.Main
+local loader = require(dir.Utility.Loader)
 function bootstrapper:Init()
-    ObjectHandler()
+    loader.SpawnAll(loader.LoadDescendants(modules), "PreInit")
+    loader.SpawnAll(loader.LoadDescendants(modules), "Init")
 end
 
 return bootstrapper

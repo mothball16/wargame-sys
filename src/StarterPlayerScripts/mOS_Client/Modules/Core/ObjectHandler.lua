@@ -8,8 +8,11 @@ local dir = dirClient.Main
 local objectInitializer = require(game.ReplicatedStorage.Shared.mOS_Replicated.Modules.ObjectManagement.ObjectInitializer).new("LocalController")
 local owned = {}
 -- load order
+local ObjectHandler = {}
 
-return function()
+
+
+function ObjectHandler:PreInit()
     dir.Net:Connect(dir.Events.Reliable.OnInitialize, function(required)
         if owned[required] then return end
         owned[required] = objectInitializer:Execute(required)
@@ -22,3 +25,5 @@ return function()
         end
     end)
 end
+
+return ObjectHandler

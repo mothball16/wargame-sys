@@ -1,6 +1,6 @@
 local dir = require(script.Parent.Parent.Parent.Directory)
 local FXActivator = require(dir.Modules.FX.FXActivator)
-local FXCreator = require(dir.Modules.FX.FXCreator)
+--local FXCreator = require(dir.Modules.FX.FXCreator)
 local FXPreserve = require(dir.Modules.FX.FXPreserve)
 
 --[[
@@ -10,6 +10,6 @@ Preserve - intercepts and reparents particle holders right before destruction
 ]]
 return {
     Activate = FXActivator :: typeof(FXActivator),
-    Create = FXCreator :: typeof(FXCreator),
+    --Create = FXCreator :: typeof(FXCreator),
     Preserve = FXPreserve :: typeof(FXPreserve)
 }

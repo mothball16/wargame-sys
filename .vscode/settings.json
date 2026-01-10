@@ -7,7 +7,21 @@
             "folderPath": "wargame-systems\\src\\client\\mAS_Client\\Modules\\"
         }
     ],
-    "files.exclude": {},
+    "files.exclude": {
+        "src/client/mAS_Client": true,
+        "src/client/mGS_Client": true,
+        "src/server/mAS_Server": true,
+        "src/server/mGS_Server": true,
+        "src/shared/mAS_Replicated": true,
+        "src/shared/mGS_Replicated": true,
+        "src/shared/mAS_Replicated/Modules/AttachmentSystem": true,
+        "src/StarterPlayerScripts/mAS_Client": true,
+        "src/StarterPlayerScripts/mGS_Client": true,
+        "src/ReplicatedStorage/mGS_Replicated": true,
+        "src/ReplicatedStorage/mAS_Replicated": true,
+        "src/ServerScriptService/mAS_Server": true,
+        "src/ServerScriptService/mGS_Server": true
+    },
     "folder-scopes.scopes": {
         "DoorSystem": {
             "wargame-systems": {
@@ -21,7 +35,13 @@
                     "src/shared/mGS_Replicated",
                     "src/shared/mAS_Replicated",
                     "src/shared/mAS_Replicated",
-                    "src/shared/mAS_Replicated/Modules/AttachmentSystem"
+                    "src/shared/mAS_Replicated/Modules/AttachmentSystem",
+                    "src/StarterPlayerScripts/mAS_Client",
+                    "src/StarterPlayerScripts/mGS_Client",
+                    "src/ReplicatedStorage/mGS_Replicated",
+                    "src/ReplicatedStorage/mAS_Replicated",
+                    "src/ServerScriptService/mAS_Server",
+                    "src/ServerScriptService/mGS_Server"
                 ]
             }
         }

@@ -1,6 +1,7 @@
 local share =           game.ReplicatedStorage.Shared
 local root =            script.Parent
 local utility =         share.mOS_Utility
+local isServer =        game:GetService("RunService"):IsServer()
 
 local modules =         root.Modules
 local configs =         root.Configs
@@ -9,6 +10,7 @@ return {
     Configs =           configs,
     Modules =           modules,
     Utility =           utility,
+    isServer =          isServer,
 
     ServerSignals =     require(modules.ServerSignals),
     Consts =            require(configs.Constants),
