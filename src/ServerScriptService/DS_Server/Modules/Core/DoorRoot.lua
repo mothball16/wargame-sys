@@ -26,7 +26,7 @@ DoorRoot.State = {
 
 local fallbacks = {
     DoorRoot = {
-        DoorClipsDuringAnim = true,
+        DoorClipsDuringAnim = false,
         CloseType = DoorRoot.CloseType.AutoClose,
         AutoCloseSeconds = 3,
     },
@@ -57,7 +57,7 @@ function DoorRoot.new(args, required)
         transitionStep = 0
     }, DoorRoot)
     print(self.config)
-    
+
     -- look 4 promtps
     for _, scannerPart: BasePart in scannerDirectory:GetChildren() do
         local moverKey = scannerPart.Name

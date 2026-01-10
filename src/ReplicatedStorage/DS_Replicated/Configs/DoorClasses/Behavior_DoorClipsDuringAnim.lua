@@ -3,7 +3,7 @@ local Door = require(dir.Configs.DoorConfig)
 
 local BehaviorDoorClipsDuringAnim: Door.DoorConfig = {
     DoorRoot = {
-        DoorClipsDuringAnim = false
+        DoorClipsDuringAnim = true
     },
 }
 return BehaviorDoorClipsDuringAnim
