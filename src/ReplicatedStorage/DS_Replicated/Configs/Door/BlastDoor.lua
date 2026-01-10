@@ -4,8 +4,7 @@ local Door: DoorConfig.DoorSetup = {
     Classes = {
         "Auth_LevelOne",
         "CloseType_Manual", "OpenType_Manual",
-
-        "Scanner_RFID",
+        "Scanner_Default",
         "Behavior_DoorClipsDuringAnim",
     },
     Sequence = {
@@ -14,4 +13,4 @@ local Door: DoorConfig.DoorSetup = {
     }
 }
 
-return {Build = DoorConfig.Build(Door), Raw = Door}
+return DoorConfig.Build(Door)

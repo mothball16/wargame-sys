@@ -135,7 +135,6 @@ return function()
         for _, v in pairs(CS:GetTagged(tag)) do
             SpawnListener(v, handler)
         end
-
         CS:GetInstanceAddedSignal(tag):Connect(function(inst)
             SpawnListener(inst, handler)
         end)

@@ -1,5 +1,6 @@
 local Helpers = {}
 
+-- TODO: look into this. some weird pointer siht goes on with this deep merge stuff
 function Helpers:TableCombine(tbl1, ...)
     for _, t in ipairs({...}) do
         for k, v in pairs(t) do
@@ -25,6 +26,7 @@ function Helpers:TableCombineNew(...)
     end
     return tbl
 end
+
 function Helpers:TableOverwrite(orig, overwrite)
     local tbl = {}
     for k, v in pairs(orig) do

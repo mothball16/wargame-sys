@@ -11,4 +11,4 @@ local Door: DoorConfig.DoorSetup = {
     }
 }
 
-return {Build = DoorConfig.Build(Door), Raw = Door}
+return DoorConfig.Build(Door)

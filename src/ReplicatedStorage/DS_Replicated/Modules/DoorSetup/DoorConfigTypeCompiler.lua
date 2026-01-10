@@ -73,7 +73,7 @@ export type DoorSetup = {
     }
 }
 
-DoorData.Build = builder
+DoorData.Build = builder.Build
 
 return DoorData
 ]]
@@ -98,3 +98,6 @@ end
 
 target.Source = CompileDoorConfig()
 warn("DoorConfig compiled successfully")
+
+-- TODO: compare sources on startup with sum script idk what script yet.
+-- (wrap this into a function -> have a snippet that requires and calls this -> have an initable file that checks for diffs)

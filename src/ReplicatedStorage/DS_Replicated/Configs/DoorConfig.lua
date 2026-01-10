@@ -38,11 +38,11 @@ export type DoorConfig = {
 export type DoorSetup = {
     Classes: {"Auth_LevelFive" | "Auth_LevelOne" | "CloseType_Auto" | "CloseType_ForcedAuto" | "CloseType_Manual" | "OpenType_Auto" | "OpenType_Manual" | "Scanner_Default" | "Scanner_Hidden" | "Scanner_RFID" | "Behavior_DoorClipsDuringAnim"},
     Sequence: {
-        Type: "DoubleDoor" | "SingleDirectionalDoor",
+        Type: "SingleDirectionalDoor" | "DoubleDoor",
         Args: {any}
     }
 }
 
-DoorData.Build = builder
+DoorData.Build = builder.Build
 
 return DoorData

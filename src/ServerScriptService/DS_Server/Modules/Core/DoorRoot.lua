@@ -56,7 +56,8 @@ function DoorRoot.new(args, required)
         lockStep = 0,
         transitionStep = 0
     }, DoorRoot)
-
+    print(self.config)
+    
     -- look 4 promtps
     for _, scannerPart: BasePart in scannerDirectory:GetChildren() do
         local moverKey = scannerPart.Name
@@ -73,7 +74,6 @@ function DoorRoot.new(args, required)
                 return self:Activate(plr, moverKey)
             end
         })
-        print(scannerArgs)
         table.insert(self.scanners, Scanner.new(scannerArgs, required):Mount())
     end
 
