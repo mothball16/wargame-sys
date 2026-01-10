@@ -1,6 +1,6 @@
-local Door = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
+local DoorConfig = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
 
-local BlastDoor: Door.DoorSetup = {
+local Door: DoorConfig.DoorSetup = {
     Classes = {
         "Auth_LevelOne",
         "CloseType_Manual", "OpenType_Manual",
@@ -14,4 +14,4 @@ local BlastDoor: Door.DoorSetup = {
     }
 }
 
-return Door.Build(BlastDoor), BlastDoor
+return {Build = DoorConfig.Build(Door), Raw = Door}

@@ -51,7 +51,7 @@ function DoorClientManager:_OnCreated(required: Model)
     end
 
     -- find the prefab instructions
-    local prefab = require(required:WaitForChild("InitRoot"):WaitForChild("Prefab").Value)
+    local prefab = assert(require(required:WaitForChild("InitRoot"):WaitForChild("Prefab").Value).Build, "prefab doesn't exist/is not properly formatted")
     local partMover = prefab["PartMover"]
     local instructions = partMover["Instructions"]
     local partFolder = required:FindFirstChild("PartMover")

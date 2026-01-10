@@ -39,13 +39,14 @@ local function GetRequiredComponents(required)
 end
 
 function DoorRoot.new(args, required)
+    assert(args.Build, "doorconfig should be formatted as a table with the built config referencable under key 'Build'")
     local movingParts, scannerDirectory = GetRequiredComponents(required)
     local self = setmetatable({
         ClassName = script.Name,
         required = required,
         id = dir.NetUtils:GetId(required),
         maid = dir.Maid.new(),
-        config = dir.Helpers:TableOverwrite(fallbacks, args),
+        config = dir.Helpers:TableOverwrite(fallbacks, args.Build),
         movingParts = movingParts,
         collidableParts = {},
         scanners = {},
@@ -65,13 +66,15 @@ function DoorRoot.new(args, required)
                 moverKey, self.id))
             continue
         end
-        table.insert(self.scanners, Scanner.new(dir.Helpers:TableCombineNew(
+        local scannerArgs = dir.Helpers:TableCombineNew(
             self.config.Scanner, {
             prompt = promptInstance,
             OnActivated = function(plr)
                 return self:Activate(plr, moverKey)
             end
-        }), required):Mount())
+        })
+        print(scannerArgs)
+        table.insert(self.scanners, Scanner.new(scannerArgs, required):Mount())
     end
 
     -- cache parts to setcollide (TODO: use collisiongroups instead)

@@ -1,7 +1,7 @@
-local Door = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
-local _, Base = require(script.Parent.BlastDoor)
+local DoorConfig = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
+local Base = require(script.Parent.BlastDoor).Raw
 
-local BlastDoor: Door.DoorSetup = {
+local Door: DoorConfig.DoorSetup = {
     Classes = {
         table.unpack(Base.Classes),
         "Auth_LevelFive",
@@ -13,4 +13,4 @@ local BlastDoor: Door.DoorSetup = {
     }
 }
 
-return Door.Build(BlastDoor), BlastDoor
+return {Build = DoorConfig.Build(Door), Raw = Door}

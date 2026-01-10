@@ -1,6 +1,6 @@
-local Door = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
+local DoorConfig = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.DoorConfig)
 
-local PushDoor: Door.DoorSetup = {
+local Door: DoorConfig.DoorSetup = {
     Classes = {
         "CloseType_ForcedAuto", "OpenType_Manual",
         "Scanner_Hidden",
@@ -11,4 +11,4 @@ local PushDoor: Door.DoorSetup = {
     }
 }
 
-return Door.Build(PushDoor), PushDoor
+return {Build = DoorConfig.Build(Door), Raw = Door}
