@@ -45,6 +45,7 @@ local function PlayStateAnim(required, instructions, partFolder)
 end
 
 function DoorClientManager:_OnCreated(required: Model)
+    --warn(`connected {required.Parent.Name}`)
     if self.activeInstances[required] then
         warn("duplicate door of GUID " .. dir.NetUtils:GetId(required) .. "was attempted to be registered, aborting")
         return
@@ -76,6 +77,8 @@ function DoorClientManager:_OnCreated(required: Model)
 end
 
 function DoorClientManager:_OnDestroyed(required)
+    --warn(`disconnected {required.Parent.Name}`)
+
     local connections = self.activeInstances[required]
     if connections then
         for _, con in pairs(connections) do

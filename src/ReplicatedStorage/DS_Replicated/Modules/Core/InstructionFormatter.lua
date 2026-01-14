@@ -1,9 +1,11 @@
+-- TODO: move this into doorconfigbuilder. this should not be its own module
+
 local prefabs = game.ReplicatedStorage.Shared.DS_Replicated.Configs.Door
 return function()
     for _, v: ModuleScript in pairs(prefabs:GetChildren()) do
         pcall(function()
             if v:IsA("ModuleScript") then
-                local config = require(v)
+                local config = require(v).Build
                 -- set default partmover instructions if not already set
                 local instructions = config.PartMover.Instructions
                 if not instructions["Default"] then

@@ -47,9 +47,12 @@ function Scanner.new(args, required: Model)
 
     -- buh.....
     self.prompt:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, required:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
-    self.maid:GiveTask(required:GetAttributeChangedSignal(dir.Consts.DOOR_ROOT_STATE_ATTR):Connect(function()
-        self.prompt:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, required:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
-    end))
+    self.maid:GiveTasks(
+        required:GetAttributeChangedSignal(dir.Consts.DOOR_ROOT_STATE_ATTR):Connect(function()
+            self.prompt:SetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR, required:GetAttribute(dir.Consts.DOOR_ROOT_STATE_ATTR))
+        end)
+    )
+    
     return self
 end
 

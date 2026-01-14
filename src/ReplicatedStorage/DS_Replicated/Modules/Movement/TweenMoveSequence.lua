@@ -22,12 +22,12 @@ local function ForEachMover(config, parts, fn)
     -- grab the instructions to translate into actionable tweens
     for key, stepsForPart in pairs(config) do
         -- grab the parts corresponding to the instructions
-        local partFolder = parts:FindFirstChild(key)
+        local partFolder = parts:WaitForChild(key)
         if not partFolder then
             validator:Warn("corresponding part for " .. key .. " instruction doesn't exist, ignoring")
             continue
         end
-        local mover = partFolder:FindFirstChild("Mover") or nil
+        local mover = partFolder:WaitForChild("Mover")
         if not mover then
             validator:Warn("mover for " .. key .. " in part folder doesn't exist, ignoring")
             continue
@@ -70,7 +70,7 @@ local function GetAnimEndState(config, parts)
         for timeOf, step in pairs(stepsForPart) do
             if timeOf > lastTime then
                 lastTime = timeOf
-                local to = validator:Exists(partFolder[step.to], "end goal of step for " .. key).Value
+                local to = assert(partFolder[step.to], "end goal of step for " .. key)
                 lastCF = to.CFrame
             end
         end

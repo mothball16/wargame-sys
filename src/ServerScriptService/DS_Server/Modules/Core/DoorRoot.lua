@@ -13,15 +13,18 @@ handles the actual door functionality
 
 local DoorRoot = {}
 DoorRoot.__index = DoorRoot
-DoorRoot.CloseType = {
-    AutoClose = "AutoClose",
-    ManualClose = "ManualClose",
-    ForcedAutoClose = "ForcedAutoClose",
-}
+
 DoorRoot.State = {
     Opened = "Open",
     Closed = "Close",
     Broken = "Broken",
+}
+
+
+DoorRoot.CloseType = {
+    AutoClose = "AutoClose",
+    ManualClose = "ManualClose",
+    ForcedAutoClose = "ForcedAutoClose",
 }
 
 local fallbacks = {
@@ -29,6 +32,11 @@ local fallbacks = {
         DoorClipsDuringAnim = false,
         CloseType = DoorRoot.CloseType.AutoClose,
         AutoCloseSeconds = 3,
+        InitialState = DoorRoot.State.Closed,
+    },
+    LockdownControl = {
+        ["Lockdown"] = dir.Consts.LOCKDOWN_CONTROL_TYPE.Close,
+        ["none"] = dir.Consts.LOCKDOWN_CONTROL_TYPE.NoChange,
     },
 }
 
@@ -56,7 +64,6 @@ function DoorRoot.new(args, required)
         lockStep = 0,
         transitionStep = 0
     }, DoorRoot)
-    print(self.config)
 
     -- look 4 promtps
     for _, scannerPart: BasePart in scannerDirectory:GetChildren() do
@@ -94,6 +101,7 @@ function DoorRoot.new(args, required)
 
     -- notify listeners
     dirServer.ServerSignals.OnDoorCreated:Fire(self.required)
+    self:SetState(self.config.DoorRoot.InitialState, {animKey = "Default"})
     return self
 end
 
@@ -102,7 +110,7 @@ function DoorRoot:Activate(plr, animKey, bypassAuth)
     if self.lock or self.transitioning then
         return dir.Consts.ACCESS_NEUTRAL
     end
-    if not (AuthChecks:Check(plr, self.config.AuthChecks) or bypassAuth) then
+    if not (AuthChecks.Check(plr, self.config.AuthChecks) or bypassAuth) then
         return dir.Consts.ACCESS_DENIED
     end
 

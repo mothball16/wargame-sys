@@ -20,4 +20,10 @@ return {
     ACCESS_NEUTRAL = "Neutral",
     ACCESS_DISABLED = "Disabled",
 
+    LOCKDOWN_CONTROL_TYPE = {
+        Close = "Close",
+        Open = "Open",
+        NoChange = "NoChange"
+    }
+
 }

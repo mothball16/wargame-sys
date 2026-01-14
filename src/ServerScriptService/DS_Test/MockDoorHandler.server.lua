@@ -48,8 +48,8 @@ dir.Net:Connect(dir.Events.Reliable.RunTest, function(plr, evt, args)
     dir.Helpers:Switch (evt) {
         ["ToggleLockdown"] = function()
             lockdown = not lockdown
-            game.ServerScriptService:SetAttribute(dir.Consts.LOCKDOWN_ATTR, lockdown and "Lockdown" or "none")
-            SetLockdown(lockdown)
+            game.ReplicatedStorage:SetAttribute(dir.Consts.LOCKDOWN_ATTR, lockdown and "Lockdown" or "none")
+            --SetLockdown(lockdown)
         end,
         ["ToggleByAttribute"] = function()
             attributeDoorOpen = not attributeDoorOpen

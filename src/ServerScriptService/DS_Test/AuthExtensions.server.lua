@@ -1,11 +1,7 @@
-local source = require(game.ServerScriptService.Server.DS_Server.Directory)
-local AuthChecks = require(source.Modules.Core.AuthChecks)
-local isLockdown = false
+local dirServer = require(game.ServerScriptService.Server.DS_Server.Directory)
+local dir = dirServer.Main
+local AuthChecks = require(dirServer.Modules.Core.AuthChecks)
 
-AuthChecks.IsLockdown = function()
-    
+AuthChecks.NotLockdown = function()
+   return game.ReplicatedStorage:GetAttribute(dir.Consts.LOCKDOWN_ATTR) ~= "Lockdown"
 end
-
-task.delay(isLockdown, function()
-    
-end)

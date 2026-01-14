@@ -191,6 +191,13 @@ function ScanVisual:SetText(rootState)
     }
 end
 
+function ScanVisual:UpdateLockdownStatus()
+    local value = game.ReplicatedStorage:GetAttribute(dir.Consts.LOCKDOWN_ATTR)
+    local isLockdown = value == "Lockdown"
+        
+    
+end
+
 function ScanVisual:ConnectEvents()
     self.maid:GiveTasks(
         self.prompt:GetAttributeChangedSignal(dir.Consts.DOOR_SCAN_VISUAL_ATTR):Connect(function()
@@ -209,7 +216,12 @@ function ScanVisual:ConnectEvents()
         end),
         self.prompt.PromptHidden:Once(function()
             self:Destroy()
-        end))
+        end),
+        -- lockdown UI update
+        game.ReplicatedStorage:GetAttributeChangedSignal(dir.Consts.LOCKDOWN_ATTR):Connect(function()
+            self:UpdateLockdownStatus()
+        end)
+    )
 
     return self
 end

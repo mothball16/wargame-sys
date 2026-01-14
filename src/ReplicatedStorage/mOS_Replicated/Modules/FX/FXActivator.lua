@@ -65,7 +65,6 @@ end
 function FXActivator:ExecuteOnClient(config, args)
 	local persistent = {}
 	config = dir.Helpers:TableOverwrite(fallbacks, config)
-	print(config)
 	for _, holder in pairs(args.object:GetChildren()) do
 		if holder.Name == config["lookFor"] then
 			FireFX(persistent, config, holder, false)

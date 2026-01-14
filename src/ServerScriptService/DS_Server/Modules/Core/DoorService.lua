@@ -10,6 +10,11 @@ local DoorService = {
 }
 
 function DoorService:_OnCreated(required)
+    if required.Parent.ModelStreamingMode ~= Enum.ModelStreamingMode.Atomic then
+        warn(`door model {required.Parent.Name} should have ModelStreamingMode Atomic!`)
+        required.Parent.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
+    end
+    
     if self.activeInstances[required] then
         warn("duplicate door of GUID " .. dir.NetUtils:GetId(required) .. "was attempted to be registered, aborting")
         return

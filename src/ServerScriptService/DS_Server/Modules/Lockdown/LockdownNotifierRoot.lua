@@ -10,7 +10,7 @@ triggers FX activator on the provided event being triggered
 WTF ROBLOX HAS STRING INTERPLOATION???
 ]]
 local audio = dir.Assets.Sounds.Lockdown
-local SSS = game.ServerScriptService
+local RS = game.ReplicatedStorage
 
 local fallbacks = {
     signal = dir.Consts.LOCKDOWN_ATTR
@@ -62,10 +62,11 @@ function LockdownNotifierRoot.new(args, required)
     return self
 end
 
+-- TODO: un-hardcode the signal location
 function LockdownNotifierRoot:Mount()
-    local OnLockdownUpdated = SSS:GetAttributeChangedSignal(self.config.signal)
+    local OnLockdownUpdated = RS:GetAttributeChangedSignal(self.config.signal)
     self.maid:GiveTask(OnLockdownUpdated:Connect(function()
-        local value = SSS:GetAttribute(self.config.signal)
+        local value = RS:GetAttribute(self.config.signal)
         self:SetState(value)
     end))
 end
@@ -88,7 +89,6 @@ function LockdownNotifierRoot:SetState(state: string)
         lookForKeyword = `FXEmit{state}Start`
     end
 
-    print(lookForKeyword)
     self:_StopPlayingFX()
     self.playing = FX.Activate:ExecuteOnServer(nil, {lookFor = lookForKeyword}, {object = self.parts})
     self.state = state
