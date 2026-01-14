@@ -36,9 +36,9 @@ export type DoorConfig = {
 }
 
 export type DoorSetup = {
-    Classes: {"Auth_LevelFive" | "Auth_LevelOne" | "CloseType_Auto" | "CloseType_ForcedAuto" | "CloseType_Manual" | "OpenType_Auto" | "OpenType_Manual" | "Scanner_Default" | "Scanner_Hidden" | "Scanner_RFID" | "Behavior_DoorClipsDuringAnim"},
+    Classes: {"Auth_LevelFive" | "Auth_LevelOne" | "CloseType_Auto" | "CloseType_ForcedAuto" | "CloseType_Manual" | "OpenType_Auto" | "OpenType_Manual" | "Scanner_Default" | "Scanner_Hidden" | "Scanner_RFID" | "Behavior_DoorClipsDuringAnim" | "Behavior_StrictLockdownControl"},
     Sequence: {
-        Type: "SingleDirectionalDoor" | "DoubleDoor",
+        Type: "SingleDirectionalDoor" | "DoubleDoor" | "SingleDoor",
         Args: {any}
     }
 }

@@ -2,6 +2,7 @@ local DoorConfig = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.D
 
 local Door: DoorConfig.DoorSetup = {
     Classes = {
+        "Auth_LockdownOnly",
         "CloseType_ForcedAuto", "OpenType_Manual",
         "Scanner_Hidden",
     },

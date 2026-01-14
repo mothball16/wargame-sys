@@ -2,15 +2,15 @@ local dir = require(game.ReplicatedStorage.Shared.DS_Replicated.Directory)
 local Door = require(dir.Configs.DoorConfig)
 local LockdownCheck = require(script.Parent.__LockdownCheck)
 
-local AuthLevelFive: Door.DoorConfig = {
+local Class: Door.DoorConfig = {
     Scanner = {
         ScanVisual = "LevelFive",
     },
     AuthChecks = {
         LockdownCheck,
-        {"HoldingToolWithTag", {"LevelFive"}}
+        {"HasToolWithTag", {"LevelFive"}}
     }
 }
 
 
-return AuthLevelFive
+return Class

@@ -2,13 +2,16 @@ local DoorConfig = require(game.ReplicatedStorage.Shared.DS_Replicated.Configs.D
 
 local Door: DoorConfig.DoorSetup = {
     Classes = {
-        "Auth_LockdownOnly",
-        "CloseType_ForcedAuto", "OpenType_Manual",
+        "Auth_LevelFive",
+        "CloseType_Manual", "OpenType_Manual",
         "Scanner_Hidden",
+        "InitialState_Opened",
+        "Behavior_DoorClipsDuringAnim",
+        "LockdownControl_Strict",
     },
     Sequence = {
         Type = "SingleDoor",
-        Args = {1, 2, "PushDoorOpen", "PushDoorClose"}
+        Args = {4, 2, "BlastDoorOpen", "BlastDoorClose"}
     }
 }
 
