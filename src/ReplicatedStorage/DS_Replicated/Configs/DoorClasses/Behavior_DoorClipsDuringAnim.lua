@@ -7,3 +7,4 @@ local Class: Door.DoorConfig = {
     },
 }
 return Class
+
