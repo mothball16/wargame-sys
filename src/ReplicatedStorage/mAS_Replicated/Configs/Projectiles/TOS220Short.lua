@@ -46,6 +46,7 @@ TOS220Short.OnHit = {
 		["amplitude"] = 20,
 	}},
 	{func = FX.Create, data = {
+		["FX"] = dir.Assets.Particles,
 		["useFX"] = "RocketMediumExplosion",
 	}},
 	{func = FX.Preserve, replicateAcrossClients = true}
