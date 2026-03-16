@@ -29,7 +29,6 @@ end
 function LockdownNotifierRoot.new(args, required)
     local parts, FXOrigin: BasePart = GetRequiredComponents(required)
     local self = setmetatable({
-        ClassName = script.Name,
         config = dir.Helpers:TableOverwrite(fallbacks, args),
         maid = dir.Maid.new(),
         parts = parts,

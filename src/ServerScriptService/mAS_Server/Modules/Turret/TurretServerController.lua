@@ -27,7 +27,6 @@ end
 
 -- TODO: we don't need attachselector initialized here
 function TurretServerController.new(args, required)
-    print(args)
     local self = setmetatable({}, TurretServerController)
     self.AttachSelector = AttachSelector.new(args["AttachSelector"], required)
     self.AttachServerController = AttachServerController.new(args["AttachServerController"], required)
