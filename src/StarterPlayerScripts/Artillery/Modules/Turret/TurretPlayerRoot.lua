@@ -43,13 +43,12 @@ function TurretPlayerRoot.new(args, required)
         joystick = args.Joystick,
     }, required)
 
+    local combinedSignals = table.clone(self.turretBase.localSignals)
+    combinedSignals.RequestProjectileSwap = self.playerControls.localSignals.RequestProjectileSwap
+
     -- 3: set up UI handler with signals from base & joystick from player controls
     self.uiHandler = uiHandler.new({
-        signals = dir.Helpers:TableCombineNew(self.turretBase.localSignals, {
-            ["OnRackUpdated"] = self.turretBase.localSignals.OnRackUpdated,
-            ["RequestProjectileSwap"] = self.playerControls.localSignals.RequestProjectileSwap,
-
-        }),
+        signals = combinedSignals,
         joystickComponent = self.playerControls.joystick,
         rack = self.turretBase:GetRackedProjectiles(),
         selected = self.turretBase.state.selectedProjectile,
