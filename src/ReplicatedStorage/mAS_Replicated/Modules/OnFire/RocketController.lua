@@ -115,6 +115,8 @@ function RocketController:Simulate(args, initLook)
 	local dt = 0.03
 	local dropFactor = 0
 	local pos = Vector3.new()
+
+	-- TODO: simulation like this should allow for calculation on different altitudes - correct this
 	while pos.Y >= 0 do
 		local speed = self:CalcSpeed(config, lifetime)
 		local velo = self:CalcVelo(initLook, speed, dropFactor)
