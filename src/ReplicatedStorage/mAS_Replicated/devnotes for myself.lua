@@ -2,6 +2,13 @@
 my sad little rubber ducky
 
 
+NEED TO FIX ASAP:
+- Validator is a sunk cost piece of shit
+- Setup requires tags to be re-added manually which is really really stupid
+  (fix: switch to bool attributes)
+- Bootstrapper uses an odd pattern
+
+
 SHOOTY STEPS (from request to projectile destruction)
 
 relevant:
