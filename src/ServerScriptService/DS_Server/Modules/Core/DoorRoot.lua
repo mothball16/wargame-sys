@@ -50,7 +50,6 @@ function DoorRoot.new(args, required)
     assert(args.Build, "doorconfig should be formatted as a table with the built config referencable under key 'Build'")
     local movingParts, scannerDirectory = GetRequiredComponents(required)
     local self = setmetatable({
-        ClassName = script.Name,
         required = required,
         id = dir.NetUtils:GetId(required),
         maid = dir.Maid.new(),
@@ -101,6 +100,10 @@ function DoorRoot.new(args, required)
 
     -- notify listeners
     dirServer.ServerSignals.OnDoorCreated:Fire(self.required)
+
+    -- TODO: make this less fragile - doorroots can load before instructionformatter runs
+    repeat task.wait() until self.config.PartMover.Instructions["Default"]
+
     self:SetState(self.config.DoorRoot.InitialState, {animKey = "Default"})
     return self
 end
