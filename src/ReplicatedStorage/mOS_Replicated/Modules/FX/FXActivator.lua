@@ -24,7 +24,7 @@ local function FireFX(persistent, config, FXHolder)
 	if config["avoidDestruction"] then
 		local originalHolder = FXHolder
 		FXHolder = originalHolder:Clone()
-		
+
 		if FXHolder:IsA("Attachment") then
 			local proxyPart = Instance.new("Part")
 			proxyPart.Name = "FXProxy"
@@ -119,6 +119,7 @@ function FXActivator:ExecuteOnServer(plr, config, args)
 			FireFX(persistent, config, holder)
 		end
 	end
+
 	dir.NetUtils:FireOtherClients(plr, dir.Events.Reliable.OnParticlePlayed, config, args)
 	return persistent
 end
