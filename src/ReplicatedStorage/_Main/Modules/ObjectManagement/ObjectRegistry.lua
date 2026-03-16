@@ -1,6 +1,6 @@
 --#region required
 local repl = script.Parent.Parent.Parent
-local validator = require(repl.Parent.mOS_Utility.Validator).new(script.Name)
+local validator = require(repl.Parent._Utilities.Validator).new(script.Name)
 local consts = require(repl.Configs.Constants)
 --#endregion required
 --[[

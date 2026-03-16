@@ -1,6 +1,6 @@
 local share =           game.ReplicatedStorage.mShared
 local repl =            share._Main
-local utility =         share.mOS_Utility
+local utility =         share._Utilities
 
 local root =            script.Parent
 local mOS =             root.Parent._Main

@@ -1,6 +1,6 @@
 local share =           game.ReplicatedStorage.mShared
 local root =            script.Parent
-local utility =         share.mOS_Utility
+local utility =         share._Utilities
 local isServer =        game:GetService("RunService"):IsServer()
 
 local modules =         root.Modules
@@ -21,3 +21,4 @@ return {
     Net =               require(utility.Net),
     Events =            require(modules.Events),
 }
+

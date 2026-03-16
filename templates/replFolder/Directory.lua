@@ -6,7 +6,7 @@ introduce any significant overhead
 local share =           game.ReplicatedStorage.mShared
 local root =            script.Parent
 local modules =         root.Modules
-local utility =         share.mOS_Utility
+local utility =         share._Utilities
 local assets =          root.Assets
 local configs =         root.Configs
 
