@@ -17,21 +17,37 @@ local fallbacks = {
 
 
 local function FireFX(persistent, config, FXHolder)
+	local cleanupTarget = FXHolder
+
 	-- if the thing being activated is about to be destroyed (onHit particles, bla bla)
 	-- then eject particles from the model so that they arent destroyed : o
 	if config["avoidDestruction"] then
-		FXHolder = FXHolder:Clone()
-		FXHolder.Parent = game.Workspace.IgnoreList
-		FXHolder.Anchored = true
-		FXHolder.CanCollide = false
-		FXHolder.CanQuery = false
+		local originalHolder = FXHolder
+		FXHolder = originalHolder:Clone()
+		
+		if FXHolder:IsA("Attachment") then
+			local proxyPart = Instance.new("Part")
+			proxyPart.Name = "FXProxy"
+			proxyPart.Transparency = 1
+			proxyPart.Anchored = true
+			proxyPart.CanCollide = false
+			proxyPart.CanQuery = false
+			proxyPart.Size = Vector3.new(0.1, 0.1, 0.1)
+			proxyPart.CFrame = originalHolder.WorldCFrame
+			proxyPart.Parent = game.Workspace.IgnoreList
+			
+			FXHolder.Parent = proxyPart
+			cleanupTarget = proxyPart
+		else
+			FXHolder.Parent = game.Workspace.IgnoreList
+			if FXHolder:IsA("BasePart") then
+				FXHolder.Anchored = true
+				FXHolder.CanCollide = false
+				FXHolder.CanQuery = false
+			end
+			cleanupTarget = FXHolder
+		end
 	end
-	-- particles should always be clientside
-	local shouldShowEmitters = not dir.isServer
-	
-	-- server-side audio is OK AFAIK. but only if the call originated from the server so that a client doesnt double play the audio
-	-- HOLY SHIT I USED NOT XOR!!
-	local shouldPlayAudio = dir.isServer == config.serverIsOrigin --(dir.isServer and config.serverIsOrigin) or (not dir.isServer and not config.serverIsOrigin)
 
 	local maxEmitLength = 0
 	for _, fx in pairs(FXHolder:GetChildren()) do
@@ -40,34 +56,41 @@ local function FireFX(persistent, config, FXHolder)
 		local delayLength = fx:GetAttribute("Delay") or config["delay"]
 		maxEmitLength = math.max(maxEmitLength, emitLength)
 
-		-- TODO: fix Ts.
-		task.delay(delayLength, function()
-			if isEmitter and shouldShowEmitters then
+		local function playFX()
+			if isEmitter then
 				fx.Enabled = true
 				task.delay(emitLength, function()
 					fx.Enabled = false
 				end)
-			elseif fx:IsA("Sound") and shouldPlayAudio then
+			elseif fx:IsA("Sound") then
 				fx.TimePosition = 0
 				fx:Play()
-				if (fx :: Sound).Looped then
+				if fx.Looped then
 					table.insert(persistent, fx)
 				end
 			end
-		end)
+		end
+
+		if delayLength > 0 then
+			task.delay(delayLength, playFX)
+		else
+			playFX()
+		end
 	end
 
 	if config["avoidDestruction"] then
-		game.Debris:AddItem(FXHolder, 30 + maxEmitLength)
+		game.Debris:AddItem(cleanupTarget, 30 + maxEmitLength)
 	end
 end
 
 function FXActivator:ExecuteOnClient(config, args)
 	local persistent = {}
+	if not args or not args.object or not args.object.Parent then return persistent end
+
 	config = dir.Helpers:TableOverwrite(fallbacks, config)
 	for _, holder in pairs(args.object:GetChildren()) do
 		if holder.Name == config["lookFor"] then
-			FireFX(persistent, config, holder, false)
+			FireFX(persistent, config, holder)
 		end
 	end
 	return persistent
