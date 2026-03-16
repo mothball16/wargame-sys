@@ -23,7 +23,7 @@
             }
           }
         },
-        "mOS_Utility": { "$path": "src/ReplicatedStorage/mOS_Utility" }
+        "_Utilities": { "$path": "src/ReplicatedStorage/_Utilities" }
       }
     },
 

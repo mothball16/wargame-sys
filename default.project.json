@@ -4,9 +4,9 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "Shared": {
+      "mShared": {
         "$className": "Folder",
-        "mOS_Utility": {"$path": "src/ReplicatedStorage/mOS_Utility"},
+        "_Utilities": {"$path": "src/ReplicatedStorage/_Utilities"},
         "_Main": {
           "$path": "src/ReplicatedStorage/_Main",
           "$properties": {
@@ -15,6 +15,7 @@
               "mOS_BootstrapperLoadOrder": {"Float64": -999}
             }
           }
+
         },
         "Doors": {
           "$path": "src/ReplicatedStorage/Doors",
@@ -36,7 +37,7 @@
     },
 
     "ServerScriptService": {
-      "Server": {
+      "mServer": {
         "$className": "Folder",
         "_Main": {
           "$path": "src/ServerScriptService/_Main",
@@ -70,7 +71,7 @@
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Client": {
+        "mClient": {
           "$className": "Folder",
           "_Main": {
             "$path": "src/StarterPlayerScripts/_Main",

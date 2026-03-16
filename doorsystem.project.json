@@ -4,7 +4,7 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "Shared": {
+      "mShared": {
         "$className": "Folder",
         "Doors": {
           "$path": "src/ReplicatedStorage/Doors",
@@ -23,12 +23,12 @@
             }
           }
         },
-        "mOS_Utility": { "$path": "src/ReplicatedStorage/mOS_Utility" }
+        "_Utilities": { "$path": "src/ReplicatedStorage/_Utilities" }
       }
     },
 
     "ServerScriptService": {
-      "Server": {
+      "mServer": {
         "$className": "Folder",
         "_Main": {
           "$path": "src/ServerScriptService/_Main",
@@ -53,7 +53,7 @@
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Client": {
+        "mClient": {
           "$className": "Folder",
           "_Main": { 
             "$path": "src/StarterPlayerScripts/_Main",
