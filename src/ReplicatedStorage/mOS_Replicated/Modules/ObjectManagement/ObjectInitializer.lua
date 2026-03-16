@@ -45,6 +45,9 @@ function ObjectInitializer:Execute(required)
         validator:Exists(controller["new"], "new function of obj. controller")
         local obj = controller.new(prefab, required)
 
+        -- assign className for debugging
+        obj.ClassName = controllerRef.Value.Name
+
         -- attach a bunch of GC stuff, since this is a huge risk for memory leaks
         local function DestroyObj()
             ObjectRegistry:Deregister(required)
