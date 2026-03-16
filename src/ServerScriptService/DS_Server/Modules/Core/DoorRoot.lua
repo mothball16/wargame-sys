@@ -131,7 +131,13 @@ end
 
 
 function DoorRoot:SetAnim(key, sequence)
-    local animKey = assert(self.config.PartMover.Instructions[key], "anim key " .. key .. " missing")
+
+    local animKey = self.config.PartMover.Instructions[key]
+    if not animKey then
+        warn(self.config.PartMover.Instructions)
+        warn("anim key " .. key .. " missing. ")
+    end
+    
     local animSequence = animKey[sequence]
     if not animSequence then
         validator:Warn("animsequence " .. sequence .. " missing from anim key " .. key)
