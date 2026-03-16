@@ -9,16 +9,14 @@ the object being on the server
 ]]
 
 local controller = {}
-local particles = dir.Assets.Particles
 local fallbacks = {
     ["useFX"] = "RocketMediumExplosion",
     ["playFor"] = 0.25,
 }
 
-
 function controller:ExecuteOnClient(config, args)
     config = dir.Helpers:TableOverwrite(fallbacks, config)
-    local template = dir.Assets.Particles:FindFirstChild(config["useFX"])
+    local template = args.FX:FindFirstChild(config["useFX"])
     if not template then
         warn("(FXCreator) no FX found for fx arg " .. config["useFX"])
         return
