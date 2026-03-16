@@ -2,7 +2,7 @@ local Debris = game:GetService("Debris")
 
 local NetUtils = {}
 local utils = script.Parent
-local core = utils.Parent.mOS_Replicated
+local core = utils.Parent._Main
 
 local Consts = require(core.Configs.Constants)
 local ObjectRegistry = require(core.Modules.ObjectManagement.ObjectRegistry)

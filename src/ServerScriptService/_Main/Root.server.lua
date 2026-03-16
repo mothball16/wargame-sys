@@ -1,0 +1,1 @@
+require(game.ReplicatedStorage.mShared._Main.Modules.LoadRoot)(script.Parent.Parent)

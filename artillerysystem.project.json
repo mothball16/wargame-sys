@@ -4,10 +4,10 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "Shared": {
+      "mShared": {
         "$className": "Folder",
-        "Doors": {
-          "$path": "src/ReplicatedStorage/Doors",
+        "Artillery": {
+          "$path": "src/ReplicatedStorage/Artillery",
           "$properties": {
             "Attributes": {
               "mOS_FrameworkFolder": {"Bool": true}
@@ -28,7 +28,7 @@
     },
 
     "ServerScriptService": {
-      "Server": {
+      "mServer": {
         "$className": "Folder",
         "_Main": {
           "$path": "src/ServerScriptService/_Main",
@@ -39,21 +39,20 @@
             }
           }
         },
-        "Doors": {
-          "$path": "src/ServerScriptService/Doors",
+        "Artillery": {
+          "$path": "src/ServerScriptService/Artillery",
           "$properties": {
             "Attributes": {
               "mOS_FrameworkFolder": {"Bool": true}
             }
           }
-        },
-        "DS_Test": { "$path": "src/ServerScriptService/DS_Test" }
+        }
       }
     },
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Client": {
+        "mClient": {
           "$className": "Folder",
           "_Main": { 
             "$path": "src/StarterPlayerScripts/_Main",
@@ -64,15 +63,14 @@
               }
             }
           },
-          "Doors": {
-            "$path": "src/StarterPlayerScripts/Doors",
+          "Artillery": {
+            "$path": "src/StarterPlayerScripts/Artillery",
             "$properties": {
               "Attributes": {
                 "mOS_FrameworkFolder": {"Bool": true}
               }
             }
-          },
-          "DS_Test": { "$path": "src/StarterPlayerScripts/DS_Test" }
+          }
         }
       }
     },

@@ -5,20 +5,98 @@
 
     "ReplicatedStorage": {
       "Shared": {
-        "$path": "src/ReplicatedStorage"
+        "$className": "Folder",
+        "mOS_Utility": {"$path": "src/ReplicatedStorage/mOS_Utility"},
+        "_Main": {
+          "$path": "src/ReplicatedStorage/_Main",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true},
+              "mOS_BootstrapperLoadOrder": {"Float64": -999}
+            }
+          }
+        },
+        "Doors": {
+          "$path": "src/ReplicatedStorage/Doors",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true}
+            }
+          }
+        },
+        "Artillery": {
+          "$path": "src/ReplicatedStorage/Artillery",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true}
+            }
+          }
+        }
       }
     },
 
     "ServerScriptService": {
       "Server": {
-        "$path": "src/ServerScriptService"
+        "$className": "Folder",
+        "_Main": {
+          "$path": "src/ServerScriptService/_Main",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true},
+              "mOS_BootstrapperLoadOrder": {"Float64": -999}
+
+            }
+          }
+        },
+        "Doors": {
+          "$path": "src/ServerScriptService/Doors",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true}
+              
+            }
+          }
+        },
+        "Artillery": {
+          "$path": "src/ServerScriptService/Artillery",
+          "$properties": {
+            "Attributes": {
+              "mOS_FrameworkFolder": {"Bool": true}
+            }
+          }
+        }
       }
     },
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
-          "$path": "src/StarterPlayerScripts"
+          "$className": "Folder",
+          "_Main": {
+            "$path": "src/StarterPlayerScripts/_Main",
+            "$properties": {
+              "Attributes": {
+                "mOS_FrameworkFolder": {"Bool": true},
+                "mOS_BootstrapperLoadOrder": {"Float64": -999}
+              }
+            }
+          },
+          "Doors": {
+            "$path": "src/StarterPlayerScripts/Doors",
+            "$properties": {
+              "Attributes": {
+                "mOS_FrameworkFolder": {"Bool": true}
+              }
+            }
+          },
+          "Artillery": {
+            "$path": "src/StarterPlayerScripts/Artillery",
+            "$properties": {
+              "Attributes": {
+                "mOS_FrameworkFolder": {"Bool": true}
+              }
+            }
+          }
         }
       }
     },

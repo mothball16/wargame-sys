@@ -1,4 +1,4 @@
-local dirServer = require(game.ServerScriptService.Server.DS_Server.Directory)
+local dirServer = require(game.ServerScriptService.Server.Doors.Directory)
 local dir = dirServer.Main
 local AuthChecks = require(dirServer.Modules.Core.AuthChecks)
 

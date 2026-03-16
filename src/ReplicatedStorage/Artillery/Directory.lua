@@ -7,6 +7,7 @@ local share =           game.ReplicatedStorage.mShared
 local root =            script.Parent
 local modules =         root.Modules
 local utility =         share.mOS_Utility
+local mOS =             share._Main
 local assets =          root.Assets
 local configs =         root.Configs
 
@@ -17,10 +18,13 @@ return {
     Modules =           modules,
     Assets =            assets,
     Utility =           utility,
+    mOS =               mOS,
     Consts =            require(modules.Constants),
     Maid =              require(utility.Maid),
     Validator =         require(utility.Validator),
     Helpers =           require(utility.Helpers),
     NetUtils =          require(utility.NetUtils),
     Net =               require(utility.Net),
+    Events =            require(root.Events),
+    Keybinds =          require(configs.Keybinds),
 }

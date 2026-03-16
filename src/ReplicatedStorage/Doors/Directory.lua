@@ -17,6 +17,8 @@ return {
     Modules =           modules,
     Assets =            assets,
     Utility =           utility,
+    mOS =               share._Main,
+    Events =            require(root.Events),
     Consts =            require(modules.Constants),
     Maid =              require(utility.Maid),
     Validator =         require(utility.Validator),

@@ -1,5 +1,5 @@
 local share =           game.ReplicatedStorage.mShared
-local repl --[[= (share.Artillery) <- replace this with repl folder]]
+local repl =            share.Doors
 
 local root =            script.Parent
 local mOS =             root.Parent._Main

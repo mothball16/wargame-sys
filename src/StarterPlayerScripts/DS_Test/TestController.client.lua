@@ -1,4 +1,4 @@
-local dirClient = require(game.StarterPlayer.StarterPlayerScripts.Client.DS_Client.Directory)
+local dirClient = require(game.StarterPlayer.StarterPlayerScripts.Client.Doors.Directory)
 local dir = dirClient.Main
 local GeneralSettings = require(dir.Configs.GeneralConfig)
 local promptRotates = GeneralSettings.RotatePromptsTowardCamera

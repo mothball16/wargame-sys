@@ -1,8 +1,8 @@
-local share =           game.ReplicatedStorage.Shared
-local repl =            share.DS_Replicated
+local share =           game.ReplicatedStorage.mShared
+local repl =            share.Doors
 
 local root =            script.Parent
-local mOS =             root.Parent.mOS_Server
+local mOS =             root.Parent._Main
 
 return {
     mOS =               mOS,

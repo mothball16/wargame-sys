@@ -1,14 +1,15 @@
 local share =           game.ReplicatedStorage.mShared
-local repl --[[= (share.Artillery) <- replace this with repl folder]]
+local repl =            share.Doors
 
 local root =            script.Parent
 local mOS =             root.Parent._Main
 
-
 return {
-    Signals =           require(repl.Modules.Core.Signals),
-    Main =              require(repl.Directory),
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
+    Modules =           root.Modules,
+    Main =              require(repl.Directory),
+    ServerSignals =     require(root.Modules.ServerSignals),
+
 }

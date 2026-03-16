@@ -4,30 +4,20 @@
     },
     "folder-color.pathColors": [
         {
-            "folderPath": "wargame-systems\\src\\client\\mAS_Client\\Modules\\"
+            "folderPath": "wargame-systems\\src\\client\\Artillery\\Modules\\"
         }
     ],
     "files.exclude": {},
     "folder-scopes.scopes": {
-        "DoorSystem": {
-            "wargame-systems": {
-                "scopedFolderPath": "",
+        "ArtillerySystem": {
+            "wargame-sys": {
+                "scopedFolderPath": "src",
                 "excludedPaths": [
-                    "src/client/mAS_Client",
-                    "src/client/mGS_Client",
-                    "src/server/mAS_Server",
-                    "src/server/mGS_Server",
-                    "src/shared/mAS_Replicated",
-                    "src/shared/mGS_Replicated",
-                    "src/shared/mAS_Replicated",
-                    "src/shared/mAS_Replicated",
-                    "src/shared/mAS_Replicated/Modules/AttachmentSystem",
-                    "src/StarterPlayerScripts/mAS_Client",
-                    "src/StarterPlayerScripts/mGS_Client",
-                    "src/ReplicatedStorage/mGS_Replicated",
-                    "src/ReplicatedStorage/mAS_Replicated",
-                    "src/ServerScriptService/mAS_Server",
-                    "src/ServerScriptService/mGS_Server"
+                    "src/ReplicatedStorage/Doors",
+                    "src/ServerScriptService/Doors",
+                    "src/ServerScriptService/DS_Test",
+                    "src/StarterPlayerScripts/Doors",
+                    "src/StarterPlayerScripts/DS_Test"
                 ]
             }
         }
