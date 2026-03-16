@@ -16,7 +16,7 @@ local fallbacks = {
 
 function controller:ExecuteOnClient(config, args)
     config = dir.Helpers:TableOverwrite(fallbacks, config)
-    local template = args.FX:FindFirstChild(config["useFX"])
+    local template = config["FX"]:FindFirstChild(config["useFX"])
     if not template then
         warn("(FXCreator) no FX found for fx arg " .. config["useFX"])
         return
