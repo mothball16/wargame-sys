@@ -3,7 +3,7 @@ local dir = require(share.mOS_Replicated.Directory)
 local validator = dir.Validator.new(script.Name)
 return function()
     for _, inst in pairs(share:GetChildren()) do
-        if not inst:HasTag(dir.Consts.FOLDER_IDENT_TAG_NAME) then continue end
+        if not inst:GetAttribute(dir.Consts.FOLDER_IDENT_ATTR_NAME) then continue end
 
         for _, scr in pairs(inst:GetDescendants()) do
             if scr:IsA("ModuleScript") and scr.Name == "Events" then
