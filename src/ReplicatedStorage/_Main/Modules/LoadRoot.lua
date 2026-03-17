@@ -8,17 +8,25 @@ return function(root)
 
     for _, folder in ipairs(root:GetChildren()) do
         if folder:GetAttribute(dir.Consts.FOLDER_IDENT_ATTR_NAME) then
-            local bootstrapper = validator:Exists(folder:FindFirstChild("Bootstrapper"), "bootstrapper of folder " .. folder.Name)
-            local loadOrder = folder:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) or 999
-            if bootstrapper:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) then
-                warn("place load order attribute of " .. folder.Name .. " into the folder, not the bootstrapper script")
-            end
+            task.spawn(function()
+                local success, result = pcall(function()
+                    local bootstrapper = validator:Exists(folder:FindFirstChild("Bootstrapper"), "bootstrapper of folder " .. folder.Name)
+                    local loadOrder = folder:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) or 999
+                    if bootstrapper:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) then
+                        warn("place load order attribute of " .. folder.Name .. " into the folder, not the bootstrapper script")
+                    end
 
-            table.insert(bootstrappers, {
-                load = loadOrder,
-                module = require(bootstrapper),
-                name = folder.Name
-            })
+                    table.insert(bootstrappers, {
+                        load = loadOrder,
+                        module = require(bootstrapper),
+                        name = folder.Name
+                    })
+                end)
+                if not success then
+                    warn(`!!!!! system {folder.Name} failed to load: {result}`)
+                end
+            end)
+            
         end
     end
 
