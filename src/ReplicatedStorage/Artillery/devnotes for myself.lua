@@ -7,6 +7,7 @@ NEED TO FIX ASAP:
 - Setup requires tags to be re-added manually which is really really stupid
   (fix: switch to bool attributes)
 - Bootstrapper uses an odd pattern
+- Current architecture does not support streamingenabled
 
 
 SHOOTY STEPS (from request to projectile destruction)
