@@ -1,32 +1,29 @@
-local share = game.ReplicatedStorage.mShared
+local share = game.ReplicatedStorage.m_Shared
 local dir = require(share._Main.Directory)
 local validator = dir.Validator.new(script.Name)
 local isServer = game:GetService("RunService"):IsServer()
+
+local function round(n, decimalPlaces)
+    local multiplier = 10 ^ (decimalPlaces or 0)
+    return math.round(n * multiplier) / multiplier
+end
 
 return function(root)
     local bootstrappers = {}
 
     for _, folder in ipairs(root:GetChildren()) do
         if folder:GetAttribute(dir.Consts.FOLDER_IDENT_ATTR_NAME) then
-            task.spawn(function()
-                local success, result = pcall(function()
-                    local bootstrapper = validator:Exists(folder:FindFirstChild("Bootstrapper"), "bootstrapper of folder " .. folder.Name)
-                    local loadOrder = folder:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) or 999
-                    if bootstrapper:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) then
-                        warn("place load order attribute of " .. folder.Name .. " into the folder, not the bootstrapper script")
-                    end
+            local bootstrapper = validator:Exists(folder:FindFirstChild("Bootstrapper"), "bootstrapper of folder " .. folder.Name)
+            local loadOrder = folder:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) or 999
+            if bootstrapper:GetAttribute(dir.Consts.LOAD_ORDER_TAG_NAME) then
+                warn("place load order attribute of " .. folder.Name .. " into the folder, not the bootstrapper script")
+            end
 
-                    table.insert(bootstrappers, {
-                        load = loadOrder,
-                        module = require(bootstrapper),
-                        name = folder.Name
-                    })
-                end)
-                if not success then
-                    warn(`!!!!! system {folder.Name} failed to load: {result}`)
-                end
-            end)
-            
+            table.insert(bootstrappers, {
+                load = loadOrder,
+                module = require(bootstrapper),
+                name = folder.Name
+            })
         end
     end
 
@@ -36,14 +33,23 @@ return function(root)
     table.sort(bootstrappers, function(a, b)
         return a.load < b.load
     end)
-    
+
     for _, bootstrapper in ipairs(bootstrappers) do
-        validator:Log("loading " .. bootstrapper.name .. "...")
-        bootstrapper.module:Init()
+        task.spawn(function()
+            local sysLoadStartTime = os.clock()
+            local success, result = pcall(function()
+                print("loading " .. bootstrapper.name .. "...")
+                bootstrapper.module:Init()
+            end)
+            if success then
+                warn(`[!] system {bootstrapper.name} loaded successfully in {round((os.clock() - sysLoadStartTime) * 1000, 1)  } ms.`)
+            else
+                warn(`[!] system {bootstrapper.name} failed to load: {result}`)
+            end
+        end)
     end
 
-    local endTime = os.clock()
-    warn(root.Name .. " - load completed in".. (endTime - beginTime) .. "sec.")
+    warn(`{root.Name} - load completed in {round((os.clock() - beginTime) * 1000, 1)} ms.`)
     if isServer then
         game.ServerScriptService:SetAttribute(dir.Consts.FRAMEWORK_LOADED_ATTR, true)
     else
