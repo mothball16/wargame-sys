@@ -3,7 +3,7 @@
     REFACTOR: used gemini to protect against leaks
 ]]
 
-local dir = require(game.ReplicatedStorage.mShared._Main.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared._Main.Directory)
 local HTTP = game:GetService("HttpService")
 local CS = game:GetService("CollectionService")
 

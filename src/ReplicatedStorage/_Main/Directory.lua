@@ -1,4 +1,4 @@
-local share =           game.ReplicatedStorage.mShared
+local share =           game.ReplicatedStorage.m_Shared
 local root =            script.Parent
 local utility =         share._Utilities
 local isServer =        game:GetService("RunService"):IsServer()

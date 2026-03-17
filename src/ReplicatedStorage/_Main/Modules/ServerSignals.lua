@@ -1,4 +1,4 @@
-local Signal = require(game.ReplicatedStorage.mShared._Utilities.Signal)
+local Signal = require(game.ReplicatedStorage.m_Shared._Utilities.Signal)
 return {
     InitObject = Signal.new();
     DestroyObject = Signal.new();

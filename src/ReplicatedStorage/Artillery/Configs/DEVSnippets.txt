@@ -1,6 +1,6 @@
 Converts the old system to the new one for slotting.
 
-local dir = require(game.ReplicatedStorage.mShared.Artillery.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Artillery.Directory)
 
 for i, v in pairs(game.Workspace["BM-27 Uragan"].Misc.Turret.Required.Rockets:GetChildren()) do
     if v.PrimaryPart then

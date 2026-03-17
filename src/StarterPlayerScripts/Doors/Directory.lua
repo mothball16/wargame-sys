@@ -1,4 +1,4 @@
-local share =           game.ReplicatedStorage.mShared
+local share =           game.ReplicatedStorage.m_Shared
 local repl =            share.Doors
 
 local root =            script.Parent

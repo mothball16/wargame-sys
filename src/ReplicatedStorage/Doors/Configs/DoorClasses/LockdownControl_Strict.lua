@@ -1,4 +1,4 @@
-local dir = require(game.ReplicatedStorage.mShared.Doors.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Doors.Directory)
 local Door = require(dir.Configs.DoorConfig)
 local CONTROL_TYPE = dir.Consts.LOCKDOWN_CONTROL_TYPE
 local Class: Door.DoorConfig = {

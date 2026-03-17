@@ -1,4 +1,4 @@
-local DoorConfig = require(game.ReplicatedStorage.mShared.Doors.Configs.DoorConfig)
+local DoorConfig = require(game.ReplicatedStorage.m_Shared.Doors.Configs.DoorConfig)
 
 local Door: DoorConfig.DoorSetup = {
     Classes = {

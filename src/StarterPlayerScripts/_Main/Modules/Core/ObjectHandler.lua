@@ -5,7 +5,7 @@ this script is used to boot up objects
 local dirClient = require(script.Parent.Parent.Parent.Directory)
 local dir = dirClient.Main
 
-local objectInitializer = require(game.ReplicatedStorage.mShared._Main.Modules.ObjectManagement.ObjectInitializer).new("LocalController")
+local objectInitializer = require(game.ReplicatedStorage.m_Shared._Main.Modules.ObjectManagement.ObjectInitializer).new("LocalController")
 local owned = {}
 -- load order
 local ObjectHandler = {}

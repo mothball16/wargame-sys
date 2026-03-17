@@ -1,4 +1,4 @@
-local dir = require(game.ReplicatedStorage.mShared.Doors.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Doors.Directory)
 local Door = require(dir.Configs.DoorConfig)
 
 return function(openTime, closeTime, audioOpen, audioClose)

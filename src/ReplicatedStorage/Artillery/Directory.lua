@@ -3,7 +3,7 @@ loads every dependency at the start for ease of access, roblox caches this so it
 introduce any significant overhead
 ]]
 
-local share =           game.ReplicatedStorage.mShared
+local share =           game.ReplicatedStorage.m_Shared
 local root =            script.Parent
 local modules =         root.Modules
 local utility =         share._Utilities

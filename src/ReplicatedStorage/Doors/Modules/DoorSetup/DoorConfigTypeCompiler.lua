@@ -1,6 +1,6 @@
 -- this is only to be run thru the command line !! : o
 local serverModules = game.ServerScriptService.Server.Doors.Modules
-local repl = game.ReplicatedStorage.mShared.Doors
+local repl = game.ReplicatedStorage.m_Shared.Doors
 local ScannerTemplates = repl.Assets.Models.ScannerTemplates
 local MountStrategies = serverModules.Components.ScannerMountStrategy
 local ExecStrategies = serverModules.Components.ScannerExecuteStrategy
@@ -30,7 +30,7 @@ local function CompileDoorConfig()
     local template = [[
 -- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN DOORCONFIGTYPECOMPILER SNIPPET IN CMD LINE
 -- (this will auto-upd DoorConfig. You cant see the change unless you close and re-open doorconfig if working in studio *)
-local dir = require(game.ReplicatedStorage.mShared.Doors.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Doors.Directory)
 local builder = require(dir.Modules.DoorSetup.DoorConfigBuilder)
 
 local DoorData = {}

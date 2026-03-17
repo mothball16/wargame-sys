@@ -1,4 +1,4 @@
-local share = game.ReplicatedStorage.mShared
+local share = game.ReplicatedStorage.m_Shared
 local dir = require(share._Main.Directory)
 local validator = dir.Validator.new(script.Name)
 return function()

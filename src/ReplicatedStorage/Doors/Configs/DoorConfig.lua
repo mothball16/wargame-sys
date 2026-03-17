@@ -1,6 +1,6 @@
 -- GENERATED SCRIPT DO NOT TOUCH THIS!!!! RUN DOORCONFIGTYPECOMPILER SNIPPET IN CMD LINE
 -- (this will auto-upd DoorConfig. You cant see the change unless you close and re-open doorconfig if working in studio *)
-local dir = require(game.ReplicatedStorage.mShared.Doors.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Doors.Directory)
 local builder = require(dir.Modules.DoorSetup.DoorConfigBuilder)
 
 local DoorData = {}

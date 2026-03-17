@@ -1,4 +1,4 @@
-local dir = require(game.ReplicatedStorage.mShared._Main.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared._Main.Directory)
 local objectInitializer = require(dir.Modules.ObjectManagement.ObjectInitializer).new("ServerController")
 
 local objects = {}

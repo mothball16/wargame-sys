@@ -1,6 +1,6 @@
 -- TODO: move this into doorconfigbuilder. this should not be its own module
 
-local prefabs = game.ReplicatedStorage.mShared.Doors.Configs.Door
+local prefabs = game.ReplicatedStorage.m_Shared.Doors.Configs.Door
 return function()
     for _, v: ModuleScript in pairs(prefabs:GetChildren()) do
         pcall(function()

@@ -1,5 +1,5 @@
 --#region required
-local dir = require(game.ReplicatedStorage.mShared.Artillery.Directory)
+local dir = require(game.ReplicatedStorage.m_Shared.Artillery.Directory)
 local validator = dir.Validator.new(script.Name)
 local TS = game:GetService("TweenService")
 --#endregion required
