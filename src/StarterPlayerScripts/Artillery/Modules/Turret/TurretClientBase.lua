@@ -119,9 +119,6 @@ function TurretClientBase.new(args, required)
 		OnRackUpdated = Signal.new()
 	}
 
-	-- fire off signals for UI on first update
-	self.localSignals.OnSalvoIntervalModified:Fire(self:GetSalvo())
-	self.localSignals.OnTimedIntervalModified:Fire(self:GetInterval())
 
 	self.maid:GiveTask(self.AttachClientController.localSignals.OnRackUpdated:Connect(function(rack)
 		self.localSignals.OnRackUpdated:Fire(rack, self.state.selectedProjectile)

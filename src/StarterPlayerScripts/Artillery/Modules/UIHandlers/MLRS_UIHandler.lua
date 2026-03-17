@@ -118,8 +118,11 @@ function UI.new(args, required)
 
     --call all the UI initializers here
     self:SetupStatic(args.static)
-    self:UpdateProjectileRack(args.rack)
-    self:UpdateProjectileInfo(nil)
+    self:UpdateSalvo(args.initial.salvo)
+    self:UpdateInterval(args.initial.interval)
+    self:UpdateProjectileRack(args.initial.rack)
+    self:UpdateProjectileInfo(args.initial.selected)
+
     _openTab(self.mainTabs, self.tabIndex)
 
     return self
@@ -130,44 +133,6 @@ function UI:SetupStatic(labels)
     self.components["vehicleTitle"].Text = labels.title
 end
 
-function UI:UpdateProjectileInfo(selected)
-    local loadedDisplay = self.lastRack[selected] and string.rep("|", #self.lastRack[selected].slots) or "re-select or re-arm"
-    self.components["loadedProjectilePanel"].ProjectileName.Text = selected or "N/A"
-    self.components["loadedProjectilePanel"].Count.Text = loadedDisplay
-    self.lastSelected = selected
-end
-
-function UI:UpdateProjectileRack(rack)
-    local component = self.components["armingSubPanelList"]
-    for _, v in pairs(component:GetChildren()) do
-        if v:IsA("Frame") and v.Name ~= "Template" then
-            v:Destroy()
-        end
-    end
-    local atLeastOneProjectile = false
-
-    for id, data in pairs(rack) do
-        atLeastOneProjectile = true
-        local projectileCount = #data.slots
-        local projectileName = data.name
-        local clone = component.Template:Clone()
-        clone.Name = data.name
-        clone.ProjectileName.Text = projectileName
-        clone.Count.Text = "x" .. projectileCount
-        clone.Parent = component
-        clone.Visible = true
-        clone.Place.Frame.Visible = (self.lastSelected == id)
-        clone.Place.MouseButton1Down:Connect(function()
-            self.signals.RequestProjectileSwap:Fire(id)
-            self:UpdateProjectileInfo(id)
-            self:UpdateProjectileRack(rack)
-        end)
-    end
-
-    component.Visible = atLeastOneProjectile
-    self.components["armingSubPanel"].AllEmpty.Visible = not atLeastOneProjectile
-    self.lastRack = rack
-end
 
 local function Lerp(a, b, t)
 	return a + (b - a) * t
@@ -180,12 +145,12 @@ function UI:SetupConnections(signals)
         self:UpdateProjectileInfo(selected)
     end))
 
-    self.maid:GiveTask(signals.OnSalvoIntervalModified:Connect(function(salvoAmount)
-	    self.components["combatSubPanelInstruments"].Salvo.Label.Text = salvoAmount .. "x"
+    self.maid:GiveTask(signals.OnSalvoIntervalModified:Connect(function(salvo)
+        self:UpdateSalvo(salvo)
     end))
 
-    self.maid:GiveTask(signals.OnTimedIntervalModified:Connect(function(timeDelay)
-        self.components["combatSubPanelInstruments"].Interval.Label.Text = timeDelay .. "s"
+    self.maid:GiveTask(signals.OnTimedIntervalModified:Connect(function(interval)
+        self:UpdateInterval(interval)
     end))
 
     self.maid:GiveTask(signals.OnRangeFinderToggled:Connect(function(toggle)
@@ -248,6 +213,56 @@ function UI:Update(dt, state: types.UILoad)
     self.components["horizAxis"].BackgroundColor3 = state.lockedAxes.y
         and FOCUS_AXIS_COLOR or FREE_AXIS_COLOR
 end
+
+
+function UI:UpdateProjectileInfo(selected)
+    local loadedDisplay = self.lastRack[selected] and string.rep("|", #self.lastRack[selected].slots) or "re-select or re-arm"
+    self.components["loadedProjectilePanel"].ProjectileName.Text = selected or "N/A"
+    self.components["loadedProjectilePanel"].Count.Text = loadedDisplay
+    self.lastSelected = selected
+end
+
+function UI:UpdateProjectileRack(rack)
+    local component = self.components["armingSubPanelList"]
+    for _, v in pairs(component:GetChildren()) do
+        if v:IsA("Frame") and v.Name ~= "Template" then
+            v:Destroy()
+        end
+    end
+    local atLeastOneProjectile = false
+
+    for id, data in pairs(rack) do
+        atLeastOneProjectile = true
+        local projectileCount = #data.slots
+        local projectileName = data.name
+        local clone = component.Template:Clone()
+        clone.Name = data.name
+        clone.ProjectileName.Text = projectileName
+        clone.Count.Text = "x" .. projectileCount
+        clone.Parent = component
+        clone.Visible = true
+        clone.Place.Frame.Visible = (self.lastSelected == id)
+        clone.Place.MouseButton1Down:Connect(function()
+            self.signals.RequestProjectileSwap:Fire(id)
+            self:UpdateProjectileInfo(id)
+            self:UpdateProjectileRack(rack)
+        end)
+    end
+
+    component.Visible = atLeastOneProjectile
+    self.components["armingSubPanel"].AllEmpty.Visible = not atLeastOneProjectile
+    self.lastRack = rack
+end
+
+function UI:UpdateSalvo(salvo)
+	self.components["combatSubPanelInstruments"].Salvo.Label.Text = salvo .. "x"
+end
+
+function UI:UpdateInterval(interval)
+    self.components["combatSubPanelInstruments"].Interval.Label.Text = interval .. "s"
+end
+
+
 
 function UI:Destroy()
     self.maid:DoCleaning()

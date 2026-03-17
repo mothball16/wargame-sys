@@ -29,6 +29,7 @@ function TurretPlayerRoot.new(args, required)
     local self = setmetatable({
         turretBase = TurretClientBase.new(args, required),
         joystick = (OptionLocator:Get("Joystick") :: types.Joystick).new(args.Joystick),
+        UILoad = {},
         maid = dir.Maid.new()
     }, TurretPlayerRoot)
 
@@ -45,8 +46,14 @@ function TurretPlayerRoot.new(args, required)
     self.uiHandler = OptionLocator:Get("UIHandler").new({
         signals = combinedSignals,
         joystickComponent = self.playerControls.joystick,
-        rack = self.turretBase:GetRackedProjectiles(),
-        selected = self.turretBase.state.selectedProjectile,
+
+        initial = {
+            rack = self.turretBase:GetRackedProjectiles(),
+            salvo = self.turretBase:GetSalvo(),
+            interval = self.turretBase:GetInterval(),
+            selected = self.turretBase.state.selectedProjectile,
+        },
+
         static = {
             title = self.turretBase.config.turretName,
         }
@@ -64,34 +71,34 @@ function TurretPlayerRoot.new(args, required)
     self.maid:GiveTask(RuS.RenderStepped:Connect(function(dt)
         self:Step(dt)
     end))
-
     return self
+end
+
+function TurretPlayerRoot:UpdateUI(dt)
+    local stickPos, stickRaw = self.joystick:GetInput()
+    self.UILoad.stickPos = stickPos
+    self.UILoad.stickRaw = stickRaw
+    self.UILoad.stickTime = self.playerControls.timeHoldingJoystick
+    self.UILoad.tickMult = self.playerControls.rotationMult
+    self.UILoad.lockedAxes = {
+        x = self.playerControls.joystick.lockedX,
+        y = self.playerControls.joystick.lockedY}
+    self.UILoad.rot = self.turretBase.TwoAxisRotator:GetRot()
+    self.UILoad.orient = self.turretBase.OrientationReader:GetDirection()
+    self.UILoad.pos = self.turretBase.OrientationReader:GetPos()
+    self.UILoad.crosshair = self.turretBase.OrientationReader:GetForwardPos(2000)
+    self.UILoad.inCamera = self.turretBase.ForwardCamera
+        and self.playerControls.controller.ForwardCamera.enabled or false
+    self.UILoad.selectedProjectileType = self.turretBase.selectedProjectileType
+    self.UILoad.rackedProjectiles = self.turretBase:GetRackedProjectiles()
+
+    self.uiHandler:Update(dt, self.UILoad)
 end
 
 function TurretPlayerRoot:Step(dt)
     self.turretBase:Update(dt)
     self.playerControls:Update(dt)
-    local stickPos, stickRaw = self.joystick:GetInput()
-
-    --TODO: cache the table instead of allocating a new one every frame
-    self.uiHandler:Update(dt, {
-        stickPos = stickPos,
-        stickRaw = stickRaw,
-        stickTime = self.playerControls.timeHoldingJoystick,
-        stickMult = self.playerControls.rotationMult,
-        lockedAxes = {
-            x = self.playerControls.joystick.lockedX,
-            y = self.playerControls.joystick.lockedY},
-
-        rot = self.turretBase.TwoAxisRotator:GetRot(),
-        orient = self.turretBase.OrientationReader:GetDirection(),
-        pos = self.turretBase.OrientationReader:GetPos(),
-        crosshair = self.turretBase.OrientationReader:GetForwardPos(2000),
-        inCamera = self.turretBase.ForwardCamera
-            and self.playerControls.controller.ForwardCamera.enabled or false,
-        selectedProjectileType = self.turretBase.selectedProjectileType,
-        rackedProjectiles = self.turretBase:GetRackedProjectiles()
-    } :: types.UILoad)
+    self:UpdateUI(dt)
 end
 
 return TurretPlayerRoot
