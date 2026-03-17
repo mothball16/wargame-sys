@@ -18,12 +18,14 @@ local fallbacks = {
 local MouseBasedJoystick = {}
 MouseBasedJoystick.__index = MouseBasedJoystick
 
-function MouseBasedJoystick.new(args, required)
-    local self = setmetatable({}, MouseBasedJoystick)
-    self.config = dir.Helpers:TableOverwrite(fallbacks, args)
-    self.lockedX = args.lockedX
-    self.lockedY = args.lockedY
-    self.enabled = args.enabled
+function MouseBasedJoystick.new(args)
+    local self = setmetatable({
+        config = dir.Helpers:TableOverwrite(fallbacks, args),
+        lockedX = args.lockedX,
+        lockedY = args.lockedY,
+        enabled = args.enabled,
+    }, MouseBasedJoystick)
+
     return self
 end
 
@@ -67,7 +69,7 @@ function MouseBasedJoystick:CanEnable()
 end
 
 function MouseBasedJoystick:Destroy()
-    
+
 end
 
 function MouseBasedJoystick:Enable()
