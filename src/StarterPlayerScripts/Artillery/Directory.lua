@@ -12,4 +12,15 @@ return {
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
+
+    Options = {
+        Joystick = {
+            path = repl.Modules.Joystick,
+            default = "MouseBasedJoystick"
+        },
+        UIHandler = {
+            root.Modules.UIHandlers,
+            default = "MLRS_UIHandler"
+        },
+    }
 }

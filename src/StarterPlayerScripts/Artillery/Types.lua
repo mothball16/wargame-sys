@@ -20,4 +20,13 @@ export type UILoad = {
     inCamera: boolean,
 }
 
+export type Joystick = {
+    lockedX: boolean,
+    lockedY: boolean,
+    enabled: boolean,
+    CanEnable: (self: Joystick) -> boolean,
+    GetInput: (self: Joystick) -> (Vector2, Vector2),
+    Destroy: (self: Joystick) -> ()
+}
+
 return module

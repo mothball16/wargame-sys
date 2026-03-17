@@ -74,10 +74,6 @@ export type TurretClientBase = {
 
 --#region init
 
-local function GetRequiredComponents(required)
-
-end
-
 function TurretClientBase.new(args, required)
 	local self = setmetatable({}, TurretClientBase)
 	self.id = dir.NetUtils:GetId(required)

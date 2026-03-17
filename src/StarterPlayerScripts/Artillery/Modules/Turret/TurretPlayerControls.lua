@@ -1,6 +1,7 @@
 --#region required
 local dirClient = require(script.Parent.Parent.Parent.Directory)
 local dir = dirClient.Main
+local types = dirClient.Types
 local TurretClientBase = require(script.Parent.TurretClientBase)
 local InputSystem = require(dirClient.mOS.Modules.Input.InputSystem)
 local Signal = require(dir.Utility.Signal)
@@ -22,30 +23,23 @@ TurretPlayerControls.__index = TurretPlayerControls
 local JOYSTICK_TOGGLE_THRESHOLD = 0.25
 local JOYSTICK_PRECISION_MULT = 0.25
 export type TurretPlayerControls = {
-	controller: TurretClientBase.TurretClientBase
+	controller: TurretClientBase.TurretClientBase,
+	joystick: types.Joystick
 }
 
-local function GetRequiredComponents(required)
-	local joystick = require(validator:ValueIsOfClass(required:FindFirstChild("Joystick"), "ModuleScript"))
-	validator:Exists(joystick.GetInput, "GetInput function of joystick")
-	validator:Exists(joystick.CanEnable, "CanEnable function of joystick")
-	return joystick
-end
+
 
 
 function TurretPlayerControls.new(args: {
 	controller: TurretClientBase.TurretClientBase,
 	keybinds: any,
-	joystick: any,
-
+	joystick: types.Joystick,
 }, required)
-	local joystick = GetRequiredComponents(required)
-
     local self = setmetatable({
 		rotationMult = 1,
 		config = dir.Helpers:TableOverwrite(fallbacks, args),
 		controller = args.controller,
-		joystick = joystick.new(args.joystick, nil),
+		joystick = args.joystick,
 		timeHoldingJoystick = 0,
 		maid = dir.Maid.new(),
 		localSignals = {
