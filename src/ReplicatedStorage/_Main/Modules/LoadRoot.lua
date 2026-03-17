@@ -21,7 +21,7 @@ return function(root)
 
             table.insert(bootstrappers, {
                 load = loadOrder,
-                module = require(bootstrapper),
+                module = bootstrapper,
                 name = folder.Name
             })
         end
@@ -39,7 +39,7 @@ return function(root)
             local sysLoadStartTime = os.clock()
             local success, result = pcall(function()
                 print("loading " .. bootstrapper.name .. "...")
-                bootstrapper.module:Init()
+                require(bootstrapper.module):Init()
             end)
             if success then
                 warn(`[!] system {bootstrapper.name} loaded successfully in {round((os.clock() - sysLoadStartTime) * 1000, 1)  } ms.`)
