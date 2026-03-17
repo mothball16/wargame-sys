@@ -1,7 +1,6 @@
 --#region required
 local dirClient = require(script.Parent.Parent.Parent.Directory)
 local dir = dirClient.Main
-local validator = dir.Validator.new(script.Name)
 --#endregion required
 --[[
 the original UI from the 2022 version of this system

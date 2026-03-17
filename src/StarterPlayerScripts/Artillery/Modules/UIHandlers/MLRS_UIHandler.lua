@@ -1,9 +1,8 @@
 --#region required
 local dirClient = require(script.Parent.Parent.Parent.Directory)
+local types = dirClient.Types
 local dir = dirClient.Main
-local validator = dir.Validator.new(script.Name)
 local ticker = require(script.Parent.Parent.UIComponents.Ticker)
-local types = require(script.Parent.Types)
 --#endregion required
 --[[
 roact would have been a better idea in retrospect...
