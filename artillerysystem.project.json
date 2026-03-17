@@ -4,7 +4,7 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "mShared": {
+      "m_Shared": {
         "$className": "Folder",
         "Artillery": {
           "$path": "src/ReplicatedStorage/Artillery",
@@ -28,7 +28,7 @@
     },
 
     "ServerScriptService": {
-      "mServer": {
+      "m_Server": {
         "$className": "Folder",
         "_Main": {
           "$path": "src/ServerScriptService/_Main",
@@ -52,7 +52,7 @@
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "mClient": {
+        "m_Client": {
           "$className": "Folder",
           "_Main": { 
             "$path": "src/StarterPlayerScripts/_Main",

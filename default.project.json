@@ -4,7 +4,7 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "mShared": {
+      "m_Shared": {
         "$className": "Folder",
         "_Utilities": {"$path": "src/ReplicatedStorage/_Utilities"},
         "_Main": {
@@ -37,7 +37,7 @@
     },
 
     "ServerScriptService": {
-      "mServer": {
+      "m_Server": {
         "$className": "Folder",
         "_Main": {
           "$path": "src/ServerScriptService/_Main",
@@ -71,7 +71,7 @@
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "mClient": {
+        "m_Client": {
           "$className": "Folder",
           "_Main": {
             "$path": "src/StarterPlayerScripts/_Main",
