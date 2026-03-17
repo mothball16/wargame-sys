@@ -1,6 +1,11 @@
 local SPEED_MULT = 4
 local PRELOAD_RKT = "9M27F"
 return {
+    OptionLocator = {
+        Joystick = "MouseBasedJoystick",
+        UIHandler = "MLRS_UIHandler",
+    },
+
     TurretBase = {
         turretName = 'BM-27 "Ураган"';
         salvoIntervals = {1, 2};
