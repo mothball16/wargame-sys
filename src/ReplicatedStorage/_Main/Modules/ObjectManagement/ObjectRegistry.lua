@@ -36,32 +36,42 @@ function ObjectRegistry:Register(obj, required)
         .. " already exists in table. Object not added, returning old one.")
         return objects[ident], required
     end
-    -- add to ID registry
-    objects[ident] = obj
-    -- add to class registry
+
     local classTable = self:GetRawClassTable(obj["ClassName"])
+
+    -- add to registries
+    objects[ident] = obj
     classTable[ident] = obj
+    if consts.PRINT_OBJ_LIFETIME then
+        self:Dump()
+    end
     return obj, required
 end
 
 function ObjectRegistry:Deregister(required)
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
     local obj = objects[ident]
-    local classTable = self:GetRawClassTable(obj["ClassName"])
 
     if obj then
+        local classTable = self:GetRawClassTable(obj["ClassName"])
+        classTable[ident] = nil
+        objects[ident] = nil
+
         obj:Destroy()
     end
-
-    -- remove from ID registry
-    objects[ident] = nil
-    -- remove from class registry
-    classTable[ident] = nil
 end
 
 function ObjectRegistry:WasRegistered(required)
     local ident = validator:HasAttr(required, consts.OBJECT_IDENT_ATTR)
     return objects[ident] ~= nil
 end
+
+function ObjectRegistry:Dump()
+    warn("=== ObjectRegistry Dump ===")
+    print("Objects by ID:", objects)
+    print("Objects by Class:", objectsByClass)
+    warn("===========================")
+end
+
 
 return ObjectRegistry
