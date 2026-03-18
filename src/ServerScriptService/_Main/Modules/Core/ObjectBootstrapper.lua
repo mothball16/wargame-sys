@@ -10,6 +10,12 @@ local CS = game:GetService("CollectionService")
 local ServerSignals = dir.ServerSignals
 
 
+local function AwaitFramework()
+    if game.ReplicatedStorage:GetAttribute(dir.Consts.FRAMEWORK_LOADED_ATTR) then return end
+    game.ReplicatedStorage:GetAttributeChangedSignal(dir.Consts.FRAMEWORK_LOADED_ATTR):Wait()
+end
+
+
 local function Initialize(player, required)
     if player then
         dir.NetUtils:FireClient(player, dir.Events.Reliable.OnInitialize, required)
@@ -31,25 +37,29 @@ local function AddSeatInitListener(required)
     local seat = seatValue.Value
     if not seat then return end
 
-    local lastOccupant
+    local currentOwner
     seat:GetPropertyChangedSignal("Occupant"):Connect(function()
         local occupant = seat.Occupant
         if occupant then
             occupant = occupant.Parent
             local player = game.Players:GetPlayerFromCharacter(occupant)
             if player then
+                currentOwner = player
                 Initialize(player, required)
             end
         else
-            if not lastOccupant or not lastOccupant.Parent then
-                return
-            end
-            local player = game.Players:GetPlayerFromCharacter(lastOccupant)
-            if player then
-                Destroy(player, required)
+            if currentOwner then
+                Destroy(currentOwner, required)
+                currentOwner = nil
             end
         end
-        lastOccupant = occupant
+    end)
+
+    required.Destroying:Connect(function()
+        if currentOwner then
+            Destroy(currentOwner, required)
+            currentOwner = nil
+        end
     end)
 end
 
@@ -76,6 +86,13 @@ local function AddToolInitListener(required)
         Destroy(owner, required)
         owner = nil
     end)
+
+    required.Destroying:Connect(function()
+        if owner then
+            Destroy(owner, required)
+            owner = nil
+        end
+    end)
 end
 
 local function PrepImmediateSpawn(required)
@@ -94,8 +111,16 @@ local TagHandlers = {
 
 local function SpawnListener(required, handler)
     local function execute()
-        if required:GetAttribute("_hasSpawned") then return end
-        required:SetAttribute("_hasSpawned", true)
+        -- "lock" the object
+        if required:GetAttribute("_spawned") then return end
+        required:SetAttribute("_spawned", true)
+
+        -- hold off on initialization till framework is done loading
+        -- this ensures any prefabs/controllers have been registered first
+        AwaitFramework()
+
+        -- do not initialize if it was destroyed while awaiting the framework!
+        if not required:IsDescendantOf(workspace) then return end
 
         if not required:GetAttribute(dir.Consts.OBJECT_IDENT_ATTR) then
             required:SetAttribute(dir.Consts.OBJECT_IDENT_ATTR, HTTP:GenerateGUID())
@@ -109,25 +134,27 @@ local function SpawnListener(required, handler)
         end
     end
 
-    if required:IsDescendantOf(workspace) then
-        execute()
-    else
-        -- wait till this is connected
-        local connection
-        local destroyConn
-        destroyConn = required.Destroying:Connect(function()
-            if connection then connection:Disconnect() end
-            if destroyConn then destroyConn:Disconnect() end
-        end)
-
-        connection = required.AncestryChanged:Connect(function(_, parent)
-            if parent and required:IsDescendantOf(workspace) then
-                connection:Disconnect()
+    task.spawn(function()
+        if required:IsDescendantOf(workspace) then
+            execute()
+        else
+            -- wait till this is connected
+            local connection
+            local destroyConn
+            destroyConn = required.Destroying:Connect(function()
+                if connection then connection:Disconnect() end
                 if destroyConn then destroyConn:Disconnect() end
-                execute()
-            end
-        end)
-    end
+            end)
+
+            connection = required.AncestryChanged:Connect(function(_, parent)
+                if parent and required:IsDescendantOf(workspace) then
+                    connection:Disconnect()
+                    if destroyConn then destroyConn:Disconnect() end
+                    execute()
+                end
+            end)
+        end
+    end)
 end
 
 return function()
