@@ -12,6 +12,7 @@ return {
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
+    Modules =           root.Modules,
 
     Options = {
         Joystick = {

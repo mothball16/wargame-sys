@@ -5,11 +5,11 @@ local utility =         share._Utilities
 local root =            script.Parent
 local mOS =             root.Parent._Main
 
-
 return {
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
     Utility =           utility,
+    Modules =           root.Modules,
     Main =              require(repl.Directory)
 }

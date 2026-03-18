@@ -1,15 +1,13 @@
 local share =           game.ReplicatedStorage.m_Shared
-local repl =            share.Doors
+local repl =            share._Main
 
 local root =            script.Parent
 local mOS =             root.Parent._Main
 
-
 return {
-    Signals =           require(repl.Modules.Core.Signals),
-    Main =              require(repl.Directory),
-    Modules =           root.Modules,
     mOS =               mOS,
     Repl =              repl,
     Root =              root,
+    Modules =           root.Modules,
+    Main =              require(repl.Directory)
 }
