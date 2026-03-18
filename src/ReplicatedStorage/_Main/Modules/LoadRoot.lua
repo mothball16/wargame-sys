@@ -37,10 +37,11 @@ return function(root)
     for _, bootstrapper in ipairs(bootstrappers) do
         task.spawn(function()
             local sysLoadStartTime = os.clock()
-            local success, result = pcall(function()
+            local success, result = xpcall(function()
                 print("loading " .. bootstrapper.name .. "...")
                 require(bootstrapper.module):Init()
-            end)
+            end, debug.traceback)
+
             if success then
                 warn(`[!] system {bootstrapper.name} loaded successfully in {round((os.clock() - sysLoadStartTime) * 1000, 1)  } ms.`)
             else
@@ -50,9 +51,5 @@ return function(root)
     end
 
     warn(`{root.Name} - load completed in {round((os.clock() - beginTime) * 1000, 1)} ms.`)
-    if isServer then
-        game.ServerScriptService:SetAttribute(dir.Consts.FRAMEWORK_LOADED_ATTR, true)
-    else
-        game.StarterPlayer:SetAttribute(dir.Consts.FRAMEWORK_LOADED_ATTR, true)
-    end
+    game.ReplicatedStorage:SetAttribute(dir.Consts.FRAMEWORK_LOADED_ATTR, true)
 end
