@@ -111,10 +111,6 @@ local TagHandlers = {
 
 local function SpawnListener(required, handler)
     local function execute()
-        -- "lock" the object
-        if required:GetAttribute("_spawned") then return end
-        required:SetAttribute("_spawned", true)
-
         -- hold off on initialization till framework is done loading
         -- this ensures any prefabs/controllers have been registered first
         AwaitFramework()
@@ -122,6 +118,13 @@ local function SpawnListener(required, handler)
         -- do not initialize if it was destroyed while awaiting the framework!
         if not required:IsDescendantOf(workspace) then return end
 
+        ----------------------(stuff happens here)-----------------------
+
+        -- lock the object
+        if required:GetAttribute("_spawned") then return end
+        required:SetAttribute("_spawned", true)
+
+        -- generate ID if needed
         if not required:GetAttribute(dir.Consts.OBJECT_IDENT_ATTR) then
             required:SetAttribute(dir.Consts.OBJECT_IDENT_ATTR, HTTP:GenerateGUID())
         end
