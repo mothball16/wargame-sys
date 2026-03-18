@@ -11,6 +11,7 @@ local CS = game:GetService("CollectionService")
 local RS = game:GetService("RunService")
 local HTTPS = game:GetService("HttpService")
 local TweenMoveSequence = require(dir.Modules.Movement.TweenMoveSequence)
+local Framework = require(dir.mOS.Framework)
 
 local DoorClientManager = {
     activeInstances = {}
@@ -45,14 +46,16 @@ local function PlayStateAnim(required, instructions, partFolder)
 end
 
 function DoorClientManager:_OnCreated(required: Model)
-    --warn(`connected {required.Parent.Name}`)
+    warn(`connected {required.Parent.Name}`)
     if self.activeInstances[required] then
         warn("duplicate door of GUID " .. dir.NetUtils:GetId(required) .. "was attempted to be registered, aborting")
         return
     end
 
     -- find the prefab instructions
-    local prefab = assert(require(required:WaitForChild("InitRoot"):WaitForChild("Prefab").Value).Build, "prefab doesn't exist/is not properly formatted")
+    local initRoot = require(required:WaitForChild("InitRoot"))
+
+    local prefab = assert((Framework:GetPrefab("Door", initRoot.Prefab)).Build, "prefab doesn't exist/is not properly formatted")
     local partMover = prefab["PartMover"]
     local instructions = partMover["Instructions"]
     local partFolder = required:FindFirstChild("PartMover")
@@ -77,7 +80,7 @@ function DoorClientManager:_OnCreated(required: Model)
 end
 
 function DoorClientManager:_OnDestroyed(required)
-    --warn(`disconnected {required.Parent.Name}`)
+    warn(`disconnected {required.Parent.Name}`)
 
     local connections = self.activeInstances[required]
     if connections then
