@@ -34,7 +34,7 @@ end
 
 function Framework:SetPrefabs(systemType: string, path: Instance)
     ObjectHandler.ObjectInit:RegisterPrefabs(systemType, path)
-    return
+    return self
 end
 
 function Framework:SetController(controllerKey: string, controller: ModuleScript)
