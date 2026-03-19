@@ -26,7 +26,7 @@ Rkt9M27F.OnFire = {
 	{func = RocketController, data = {
 		["initSpeed"] = 30; ["maxSpeed"] = 600;
 		["burnIn"] = 0; ["burnOut"] = 0.6;
-		["arc"] = 0.4; ["speedArcRel"] = 0.65; ["initInacc"] = 1.5;
+		["arc"] = 18; ["speedArcRel"] = 0.02; ["initInacc"] = 1.5;
 		["despawn"] = 10;
 		["shakeIntensity"] = 1.5;
 	}},

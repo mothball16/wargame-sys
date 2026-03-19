@@ -5,15 +5,17 @@ local RocketController = {}
 
 --TODO: FIX MEMORY LEAKS!!!!!!!
 local fallbacks = {
+	["delayGravity"] = 0.25; -- to let it clear the tubing
 	["initSpeed"] = 30;
 	["maxSpeed"] = 600;
 	["accel"] = 800;
+	["accelExponential"] = 0.5;
 
 	["burnIn"] = 0;
 	["burnLerp"] = 0.4;
 
 	["arc"] = 10;
-	["speedArcRel"] = 0.5;
+	["speedArcRel"] = 0.2;
 	["initInacc"] = 1.5;
 	["flyInacc"] = 0.1;
 
@@ -28,7 +30,7 @@ function RocketController:CalcSpeed(config, lifetime)
 	local burnTime = lifetime - config["burnIn"]
 	local burnDuration = math.max(config["burnOut"] - config["burnIn"],0.01)
 	local stage = math.clamp(burnTime / burnDuration, 0, 1)
-	local speed = _numLerp(config["initSpeed"], config["maxSpeed"], stage)
+	local speed = _numLerp(config["initSpeed"], config["maxSpeed"], stage ^ config["accelExponential"])
 	return speed
 end
 function RocketController:CalcVelo(initLook, speed, drop)
@@ -36,7 +38,7 @@ function RocketController:CalcVelo(initLook, speed, drop)
 end
 
 function RocketController:StepDrop(arc, speed, dt)
-	return arc * speed * dt
+	return arc * (1 + speed) * dt
 end
 
 function RocketController:ExecuteOnClient(config, args)
@@ -44,6 +46,7 @@ function RocketController:ExecuteOnClient(config, args)
 	local maid = dir.Maid.new()
 
 	local main = args.object.PrimaryPart
+	local id = args.id or args.object:GetAttribute(dir.Consts.REPL_ID)
 	local initLook = (main.CFrame * dir.Helpers:GenInaccuracy(config["initInacc"])).LookVector
 	local dropFactor, lifetime, timepasu = 0, 0, 0
 	local lastPos = main.Position
@@ -56,12 +59,16 @@ function RocketController:ExecuteOnClient(config, args)
 	local function Destroy()
 		if not active then return end
 		active = false
-		ProjectileController.Destroy(main.Parent)
+		ProjectileController.Destroy(id)
 		maid:Destroy()
 	end
 	task.delay(dir.Consts.MAX_PROJECTILE_LIFETIME, function()
 		Destroy()
 	end)
+
+	maid:GiveTask(main.Destroying:Connect(function()
+		Destroy()
+	end))
 
 	-- main loop
 	maid:GiveTask(RuS.Heartbeat:Connect(function(dt)
@@ -75,7 +82,7 @@ function RocketController:ExecuteOnClient(config, args)
 
 		-- replication check
 		if timepasu > dir.Consts.REPLICATION_THROTTLE then
-			ProjectileController.Replicate(main.Parent)
+			ProjectileController.Replicate(id)
 			timepasu = 0
 		end
 
@@ -91,7 +98,7 @@ function RocketController:ExecuteOnClient(config, args)
 		local result = game.Workspace:Raycast(lastPos,direction * mag, args.rayParams)
 		if result and result.Instance.Transparency < 1 then
 			warn("rocket hit stats", lifetime, (main.Position - origPos).Magnitude)
-			ProjectileController.Hit(main.Parent, {
+			ProjectileController.Hit(id, {
 				["pos"] = result.Position,
 			})
 			Destroy()
