@@ -1,6 +1,5 @@
 local HttpService = game:GetService("HttpService")
 local dir = require(game.ReplicatedStorage.m_Shared.Artillery.Directory)
-local validator = dir.Validator.new(script.Name)
 local rayParams = RaycastParams.new()
 local ProjectileRegistry = require(dir.Modules.Projectile.ProjectileRegistry)
 local RequestProjectileCreate = dir.Net:RemoteEvent(dir.Events.Reliable.RequestProjectileCreate)
@@ -8,6 +7,8 @@ local RequestProjectileHit = dir.Net:RemoteEvent(dir.Events.Reliable.RequestProj
 local RequestProjectileDestroy = dir.Net:RemoteEvent(dir.Events.Reliable.RequestProjectileDestroy)
 local RequestProjectileUpdate = dir.Net:UnreliableRemoteEvent(dir.Events.Unreliable.RequestProjectileUpdate)
 local ProjectileController = {}
+
+ProjectileController._activeProjectiles = {}
 
 --TODO: this script is lagging a bit behind the current architecture.
 -- replace event registration with netutils call
@@ -25,7 +26,7 @@ end
 function ProjectileController.Fire(firePart, ammoName, filterInstances, args)
     --------------------------------------------------------------------
     local data = ProjectileRegistry:GetProjectile(ammoName)
-    local onFire = validator:Exists(data.Config["OnFire"], "OnFire prop. of config of projectile " .. ammoName)
+    local onFire = assert(data.Config["OnFire"], "OnFire prop. of config of projectile " .. ammoName)
     args = args or {}
     --------------------------------------------------------------------
 
@@ -41,10 +42,24 @@ function ProjectileController.Fire(firePart, ammoName, filterInstances, args)
     -- [!] this is solely for a client-side copy for client-side effects
     -- the server will never use this for obv. reasons
     projectile:SetAttribute(dir.Consts.AMMO_TYPE, ammoName)
+
+    ProjectileController._activeProjectiles[id] = {
+        Model = projectile,
+        AmmoType = ammoName
+    }
+
+    -- this is a safeguard for when the projectile is destroyed externally
+    projectile.Destroying:Connect(function()
+        if ProjectileController._activeProjectiles[id] then
+            ProjectileController.Destroy(id)
+        end
+    end)
+
     rayParams.FilterDescendantsInstances = filterInstances
     dir.Helpers:TableCombine(args, {
         ["object"] = projectile,
         ["rayParams"] = rayParams,
+        ["id"] = id,
     })
 
     RequestProjectileCreate:FireServer(id, {
@@ -54,51 +69,56 @@ function ProjectileController.Fire(firePart, ammoName, filterInstances, args)
     })
 
     dir.NetUtils:ExecuteOnClient(onFire,args)
+    return id
 end
 
-function ProjectileController.Replicate(object)
-    --------------------------------------------------------------------
-    local id = object:GetAttribute(dir.Consts.REPL_ID)
-    if id == nil then
-        warn("no ID registered on projectile, not updating")
+function ProjectileController.Replicate(id)
+    local data = ProjectileController._activeProjectiles[id]
+
+    if not data or not data.Model or not data.Model.PrimaryPart then
         return
     end
-    --------------------------------------------------------------------
 
     RequestProjectileUpdate:FireServer(id, {
-        ["cf"] = object.PrimaryPart.CFrame
+        ["cf"] = data.Model.PrimaryPart.CFrame
     })
 end
 
 -- calls the hit behavior of the object
-function ProjectileController.Hit(object, args)
-    --------------------------------------------------------------------
-    if not object then validator:Warn("object doesn't exist, aborting") return end
-    local id, ammoType = object:GetAttribute(dir.Consts.REPL_ID), object:GetAttribute(dir.Consts.AMMO_TYPE)
-    if not id and ammoType then warn("no ID / no ammoType on projectile, not hitting") return end
-    local onHit = validator:Exists(ProjectileRegistry:GetProjectile(ammoType).Config.OnHit)
-    --------------------------------------------------------------------
-    
+function ProjectileController.Hit(id, args)
+    local data = ProjectileController._activeProjectiles[id]
+
+    if not data then warn("no data on projectile, not hitting") return end
+    local onHit = assert(ProjectileRegistry:GetProjectile(data.AmmoType).Config.OnHit)
+
+    args = args or {}
+    local object = data.Model
+    local pos = args.pos or (object and object.PrimaryPart and object.PrimaryPart.Position)
+    local cf = args.cf or (object and object.PrimaryPart and object.PrimaryPart.CFrame)
+
     dir.Helpers:TableCombine(args, {
         ["object"] = object,
-        ["pos"] = args.pos or object.PrimaryPart.Position,
-        ["cf"] = object.PrimaryPart.CFrame
+        ["pos"] = pos,
+        ["cf"] = cf
     })
 
     dir.NetUtils:ExecuteOnClient(onHit, args)
     RequestProjectileHit:FireServer(id, args)
 end
 
-function ProjectileController.Destroy(object)
-    --------------------------------------------------------------------
-    if not object then validator:Warn("(destroy) object doesn't exist, aborting") return end
-    local id = object:GetAttribute(dir.Consts.REPL_ID)
-    if not id then warn("no ID registered on projectile, not destroying") return end
-    --------------------------------------------------------------------
+function ProjectileController.Destroy(id)
+    local data = ProjectileController._activeProjectiles[id]
+    if not data then return end
 
-    -- prevent new updates and tell the server to drop the id
-    object:SetAttribute(dir.Consts.REPL_ID, nil)
-    object:Destroy()
+    ProjectileController._activeProjectiles[id] = nil
+
+    local object = data.Model
+
+    if object then
+        -- prevent new updates and tell the server to drop the id
+        object:SetAttribute(dir.Consts.REPL_ID, nil)
+        object:Destroy()
+    end
     RequestProjectileDestroy:FireServer(id)
 end
 
