@@ -6,12 +6,12 @@ local modules = script.Parent.Modules
 local ReplicationRouter = require(dirClient.mOS.Modules.Core.ReplicationRouter)
 local TweenMoveSequence = require(dir.Modules.Movement.TweenMoveSequence)
 local FormatInstructions = require(dir.Modules.Core.InstructionFormatter)
-local ClientObjectHandler = require(dirClient.mOS.Modules.Core.ClientObjectHandler)
+local Framework = require(dir.mOS.Framework)
 
 function bootstrapper:Init()
     FormatInstructions()
     -- register stuff to objecthandler so it knows what to initialize
-    ClientObjectHandler.ObjectInit:RegisterPrefabs("Door", dir.Configs.Door)
+    Framework:SetPrefabs("Door", dir.Configs.Door)
 
     ReplicationRouter:Route({
         {dir.Events.Reliable.PlayAnimation, TweenMoveSequence}

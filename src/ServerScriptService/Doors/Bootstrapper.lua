@@ -4,11 +4,12 @@ local dir = dirServer.Main
 local modules = script.Parent.Modules
 local loader = require(dir.Utility.Loader)
 local FormatInstructions = require(dir.Modules.Core.InstructionFormatter)
-local ServerObjectHandler = require(dirServer.mOS.Modules.Core.ServerObjectHandler)
+local Framework = require(dir.mOS.Framework)
 
 function bootstrapper:Init()
-    ServerObjectHandler.ObjectInit:RegisterController("DoorRoot", dirServer.Modules.Core.DoorRoot)
-    ServerObjectHandler.ObjectInit:RegisterPrefabs("Door", dir.Configs.Door)
+
+    Framework:SetController("DoorRoot", dirServer.Modules.Core.DoorRoot)
+    Framework:SetPrefabs("Door", dir.Configs.Door)
 
     FormatInstructions()
     loader.SpawnAll(loader.LoadDescendants(modules), "Init")

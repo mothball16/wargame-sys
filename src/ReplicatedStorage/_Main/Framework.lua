@@ -28,8 +28,20 @@ function Framework:GetPrefab(systemType: string, prefab: string)
     return ObjectHandler.ObjectInit.registeredPrefabs:Get(systemType)
 end
 
-function Framework:GetController(controller: string)
-    return ObjectHandler.ObjectInit.registeredControllers[controller]
+function Framework:GetController(controllerKey: string)
+    return ObjectHandler.ObjectInit.registeredControllers[controllerKey]
 end
+
+function Framework:SetPrefabs(systemType: string, path: Instance)
+    ObjectHandler.ObjectInit:RegisterPrefabs(systemType, path)
+    return
+end
+
+function Framework:SetController(controllerKey: string, controller: ModuleScript)
+    ObjectHandler.ObjectInit:RegisterController(controllerKey, controller)
+    return self
+end
+
+
 
 return Framework

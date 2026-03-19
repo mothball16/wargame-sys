@@ -5,12 +5,15 @@ local loader = require(dir.Utility.Loader)
 local modules = script.Parent.Modules
 local ProjectileRegistry = require(dir.Modules.Projectile.ProjectileRegistry)
 local ProjectileController = require(dir.Modules.Projectile.ProjectileController)
-local ClientObjectHandler = require(dirClient.mOS.Modules.Core.ClientObjectHandler)
-
+local Framework = require(dir.mOS.Framework)
 function bootstrapper:Init()
     -- register stuff to objecthandler so it knows what to initialize
-    ClientObjectHandler.ObjectInit:RegisterController("TurretPlayerRoot", dirClient.Modules.Turret.TurretPlayerRoot)
-    ClientObjectHandler.ObjectInit:RegisterPrefabs("Artillery", dir.Configs.Prefabs)
+    Framework
+        :SetController("TurretPlayerRoot", dirClient.Modules.Turret.TurretPlayerRoot)
+        :SetController("AttachmentToolRoot", dirClient.Modules.AttachmentSystem.AttachmentToolRoot)
+    Framework
+        :SetPrefabs("Artillery", dir.Configs.Prefabs.Artillery)
+        :SetPrefabs("Artillery__RefillTool", dir.Configs.Prefabs.RefillTool)
 
     -- init replicated modules
     ProjectileRegistry:Init()

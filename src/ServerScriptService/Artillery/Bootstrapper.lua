@@ -4,11 +4,11 @@ local dir = dirServer.Main
 local loader = require(dir.Utility.Loader)
 local ProjectileRegistry = require(dir.Modules.Projectile.ProjectileRegistry)
 local ProjectileController = require(dir.Modules.Projectile.ProjectileController)
-local ServerObjectHandler = require(dirServer.mOS.Modules.Core.ServerObjectHandler)
+local Framework = require(dir.mOS.Framework)
 
 function bootstrapper:Init()
-    ServerObjectHandler.ObjectInit:RegisterController("TurretServerController", dirServer.Modules.Turret.TurretServerController)
-    ServerObjectHandler.ObjectInit:RegisterPrefabs("Artillery", dir.Configs.Prefabs)
+    Framework:SetController("TurretServerController", dirServer.Modules.Turret.TurretServerController)
+    Framework:SetPrefabs("Artillery", dir.Configs.Prefabs)
 
     ProjectileRegistry:Init()
     ProjectileController:Init()
