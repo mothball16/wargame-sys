@@ -7,8 +7,12 @@ local ProjectileController = require(dir.Modules.Projectile.ProjectileController
 local Framework = require(dir.mOS.Framework)
 
 function bootstrapper:Init()
-    Framework:SetController("TurretServerController", dirServer.Modules.Turret.TurretServerController)
-    Framework:SetPrefabs("Artillery", dir.Configs.Prefabs)
+    Framework:SetController("TurretServerRoot", dirServer.Modules.Turret.TurretServerRoot)
+    Framework
+        :SetPrefabs("Artillery", dir.Configs.Prefabs.Artillery)
+        :SetPrefabs("Artillery__RefillTool", dir.Configs.Prefabs.RefillTool)
+
+
 
     ProjectileRegistry:Init()
     ProjectileController:Init()
