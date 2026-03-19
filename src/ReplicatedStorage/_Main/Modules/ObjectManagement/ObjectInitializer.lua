@@ -50,8 +50,10 @@ function ObjectInitializer:GetControllerInstance(root, required)
         controller = self.registeredControllers[config[self.controllerType]]
     end
     
-    if not controller and config[self.controllerType] then
-        warn(`no controller for {required.Parent.Name}`)
+    if not controller then
+        if config[self.controllerType] then
+            warn(`no controller for {required.Parent.Name} (controller: {config[self.controllerType]})`)
+        end
         return nil
     end
 
