@@ -20,6 +20,15 @@ function AttachServerHandler:Init()
 
         serverController:UseAt(plr, index)
     end)
+
+    dir.Net:Connect(dir.Events.Reliable.RequestAttachmentAttach, function(plr, id, index, attachType)
+        local obj = dir.NetUtils:GetObject(id)
+        if not obj then return end
+        local serverController = validator:Exists(
+            obj.AttachServerController, "AttachServerController of turret id ".. id)
+
+        serverController:AttachAt(plr, index, attachType)
+    end)
 end
 
 return AttachServerHandler
