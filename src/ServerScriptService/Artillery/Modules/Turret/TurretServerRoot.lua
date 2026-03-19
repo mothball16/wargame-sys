@@ -11,8 +11,8 @@ this is what players interact with regarding the rack
 - should only be generated once per turret, so this follows the default cleanup (on obj destroy)
 ]]
 
-local TurretServerController = {}
-TurretServerController.__index = TurretServerController
+local TurretServerRoot = {}
+TurretServerRoot.__index = TurretServerRoot
 
 local function GetRequiredComponents(required)
     
@@ -26,18 +26,20 @@ local function SetupSlot(attacher, slot, initWith)
 end
 
 -- TODO: we don't need attachselector initialized here
-function TurretServerController.new(args, required)
-    local self = setmetatable({}, TurretServerController)
+function TurretServerRoot.new(args, required)
+    local self = setmetatable({}, TurretServerRoot)
     self.AttachSelector = AttachSelector.new(args["AttachSelector"], required)
     self.AttachServerController = AttachServerController.new(args["AttachServerController"], required)
+    
+    print(self.AttachServerController)
     for _, slot in pairs(self.AttachSelector:GetSlots():GetChildren()) do
-        SetupSlot(self.AttachServerController, slot, args["TurretServerController"].initWith)
+        SetupSlot(self.AttachServerController, slot, args["TurretServerRoot"].initWith)
     end
     return self
 end
 
-function TurretServerController:Destroy()
+function TurretServerRoot:Destroy()
     maid:DoCleaning()
 end
 
-return TurretServerController
+return TurretServerRoot

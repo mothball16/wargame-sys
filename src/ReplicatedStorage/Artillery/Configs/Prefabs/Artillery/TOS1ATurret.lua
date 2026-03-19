@@ -32,7 +32,7 @@ return {
         "TOS220Short",
     };
 
-    TurretServerController = {};
+    TurretServerRoot = {};
     -- empty configs, just for clarity (dev)
     AttachSelector = {};
     AttachServerController = {};

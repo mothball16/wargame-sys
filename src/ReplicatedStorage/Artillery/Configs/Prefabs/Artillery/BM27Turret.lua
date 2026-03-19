@@ -39,7 +39,7 @@ return {
         "9M27F",
     };
 
-    TurretServerController = {
+    TurretServerRoot = {
         initWith = PRELOAD_RKT,
     };
     -- empty configs, just for clarity (dev)
