@@ -31,19 +31,17 @@ local TwoAxisRotator = {}
 TwoAxisRotator.__index = TwoAxisRotator
 
 local function GetRequiredComponents(required)
-    local state = validator:IsOfClass(
-        required:FindFirstChild("TwoAxisRotatorState"), "Folder")
-    local rotMotor = validator:ValueIsOfClass(
-        state:FindFirstChild("RotMotor"), "ManualWeld")
-    local pitchMotor = validator:ValueIsOfClass(
-        state:FindFirstChild("PitchMotor"), "ManualWeld")
-    local rotAudio = state:FindFirstChild("RotAudio") and state:FindFirstChild("RotAudio").Value or nil
-    local pitchAudio = state:FindFirstChild("PitchAudio") and state:FindFirstChild("PitchAudio").Value or nil
+    local state = required:FindFirstChild("TwoAxisRotatorState")
+    local rotMotor = state:FindFirstChild("RotMotor", true)
+    local pitchMotor = state:FindFirstChild("PitchMotor", true)
 
-    if not rotAudio:GetAttribute(AUDIO_ORIG_IDENTIFIER) then
+    local rotAudio = state:FindFirstChild("RotAudio", true)
+    local pitchAudio = state:FindFirstChild("PitchAudio", true)
+
+    if rotAudio and not rotAudio:GetAttribute(AUDIO_ORIG_IDENTIFIER) then
         rotAudio:SetAttribute(AUDIO_ORIG_IDENTIFIER, rotAudio.Volume)
     end
-    if not pitchAudio:GetAttribute(AUDIO_ORIG_IDENTIFIER) then
+    if pitchAudio and not pitchAudio:GetAttribute(AUDIO_ORIG_IDENTIFIER) then
         pitchAudio:SetAttribute(AUDIO_ORIG_IDENTIFIER, pitchAudio.Volume)
     end
     return rotMotor, pitchMotor, state, rotAudio

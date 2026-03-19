@@ -22,7 +22,7 @@ local fallbacks = {
 
 
 local function GetRequiredComponents(required)
-    local attachInteractionPoint = validator:ValueIsOfClass(required:FindFirstChild("AttachInteractionPoint"), "BasePart")
+    local attachInteractionPoint = required:FindFirstChild("AttachInteractionPoint")
     return attachInteractionPoint
 end
 

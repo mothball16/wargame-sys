@@ -14,7 +14,7 @@ local OrientationReader = {}
 OrientationReader.__index = OrientationReader
 
 local function GetRequiredComponents(required)
-    return validator:ValueIsOfClass(required:FindFirstChild("OrientationReader"), "BasePart")
+    return required:FindFirstChild("OrientationPoint")
 end
 function OrientationReader.new(args, required)
     local self = setmetatable({}, OrientationReader)

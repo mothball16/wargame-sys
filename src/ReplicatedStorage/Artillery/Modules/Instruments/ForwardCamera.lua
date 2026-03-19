@@ -16,7 +16,7 @@ local fallbacks = {
 }
 
 local function GetRequiredComponents(required)
-    return validator:ValueIsOfClass(required:FindFirstChild("Camera"), "BasePart")
+    return required:FindFirstChild("CameraPoint")
 end
 function ForwardCamera.new(args, required)
     local cam = GetRequiredComponents(required)

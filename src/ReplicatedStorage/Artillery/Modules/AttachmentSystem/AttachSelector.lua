@@ -16,7 +16,7 @@ AttachSelector.__index = AttachSelector
 local fallbacks = {}
 
 local function GetRequiredComponents(required)
-	local attachPoints = validator:ValueIsOfClass(required:FindFirstChild("AttachPoints"), "Folder")
+	local attachPoints = required:FindFirstChild("AttachPoints")
 	local slotsByIndex = {}
 	
 	for i = 1, #attachPoints:GetChildren() do
@@ -35,7 +35,7 @@ end
 
 -- (args, required)
 function AttachSelector.new(args, required)
-	local attachPoints, slotsByIndex, slotsByType = GetRequiredComponents(required)
+	local attachPoints, slotsByIndex = GetRequiredComponents(required)
 	local self = setmetatable({}, AttachSelector)
 	self.config = dir.Helpers:TableOverwrite(fallbacks, args)
 	self.attachPoints = attachPoints
