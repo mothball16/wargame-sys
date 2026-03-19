@@ -10,7 +10,7 @@ function bootstrapper:Init()
     -- register stuff to objecthandler so it knows what to initialize
     Framework
         :SetController("TurretPlayerRoot", dirClient.Modules.Turret.TurretPlayerRoot)
-        :SetController("AttachmentToolRoot", dirClient.Modules.AttachmentSystem.AttachmentToolRoot)
+        :SetController("RefillToolRoot", dirClient.Modules.AttachmentSystem.RefillToolRoot)
     Framework
         :SetPrefabs("Artillery", dir.Configs.Prefabs.Artillery)
         :SetPrefabs("Artillery__RefillTool", dir.Configs.Prefabs.RefillTool)
