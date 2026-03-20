@@ -41,18 +41,38 @@ function RefillToolRoot.new(args : {
     return self
 end
 
-function RefillToolRoot:ReadSelector(selector: typeof(AttachSelector), required)
-    local id = dir.NetUtils:GetId(required)
-    local slots = selector.slotsByIndex
+function RefillToolRoot:_cleanupUI()
+    if self.currentUI then
+        self.currentUI:Destroy()
+        self.currentUI = nil
+    end
+    if self.currentAttachController then
+        self.currentAttachController:Destroy()
+        self.currentAttachController = nil
+    end
+end
 
-    for i, slot in ipairs(slots) do
-        print(i, slot)
-        if not selector:SlotOccupied(slot) then
-            print(`refilling slot {i} with {self.config.refillType}`)
-            dir.NetUtils:FireServer(dir.Events.Reliable.RequestAttachmentAttach, id, i, self.config.refillType)
-        else
-            print(selector:GetAttachPointDataAt(i))
-        end
+function RefillToolRoot:OpenUI(required)
+    self:_cleanupUI()
+
+    local id = dir.NetUtils:GetId(required)
+    self.currentAttachController = AttachClientController.new(self.config, required)
+
+    self.currentUI = Refill_UIHandler.new({
+        referencePart = required:FindFirstChild("OrientationPoint"),
+        attachClientController = self.currentAttachController,
+        signals = {},
+    }, required)
+
+    if self.currentUI.attachUIDisplay then
+        self.currentUI.maid:GiveTask(self.currentUI.attachUIDisplay.OnSlotClicked:Connect(function(index, slot)
+            if not self.currentAttachController.AttachSelector:SlotOccupied(slot) then
+                print(`refilling slot {index} with {self.config.refillType}`)
+                dir.NetUtils:FireServer(dir.Events.Reliable.RequestAttachmentAttach, id, index, self.config.refillType)
+            else
+                print(`slot {index} is already occupied`)
+            end
+        end))
     end
 end
 
@@ -61,14 +81,14 @@ function RefillToolRoot:SetupConnections()
         if player ~= game.Players.LocalPlayer then return end
         if CollectionService:HasTag(prompt.Parent, dir.Consts.SELECTOR_INTERACT_ATTR) then
             local required = prompt.Parent.Parent
-            local selector = AttachSelector.new(self.config, required)
-            self:ReadSelector(selector, required)
+            self:OpenUI(required)
         end
     end))
 end
 
 function RefillToolRoot:Destroy()
     _toggleInteractionPoints(false)
+    self:_cleanupUI()
     self.maid:DoCleaning()
 end
 
