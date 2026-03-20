@@ -3,15 +3,16 @@ local ProximityPromptService = game:GetService("ProximityPromptService")
 --#region required
 local dirClient = require(script.Parent.Parent.Parent.Directory)
 local dir = dirClient.Main
-local AttachSelector = require(dir.Modules.AttachmentSystem.AttachSelector)
-local RequestAttachmentAttach = dir.Net:RemoteEvent(dir.Events.Reliable.RequestAttachmentAttach)
+local template = dir.Assets.UI.RefillUI
+local AttachClientController = require(dirClient.Modules.AttachmentSystem.AttachClientController)
+local Refill_UIHandler = require(dirClient.Modules.UIHandlers.Refill_UIHandler)
 --#endregion required
 --[[
 
 ]]
 
 local fallbacks = {
-    refillType = "TOS220Short"
+    refillType = "9M27F"
 }
 
 local RefillToolRoot = {}
